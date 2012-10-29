@@ -144,6 +144,7 @@ public class Paint2d extends JPanel{
     
     public void clearDrawlist(){
     	drawList.clear();
+    	
     	redoDrawList.clear();
     	redoArrayIndex = 0;
     	arrayIndex = 0;
