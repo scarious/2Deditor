@@ -26,6 +26,7 @@ public class Menu {
 		this.frame = paint.getFrame();
 	}
 
+
 	public void createMenu(){
 		//Where the GUI is created:
 		JMenuBar menuBar;
