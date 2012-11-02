@@ -105,7 +105,7 @@ public class Paint2d extends JPanel{
         Paint2d paint = new Paint2d();
         
         //Vytvorenie menu
-        Menu menu = new Menu(frame, paint);
+        Menu menu = new Menu(paint);
         menu.createMenu();
         //Create and set up the content pane.
         panel = new JPanel();
@@ -205,6 +205,10 @@ public class Paint2d extends JPanel{
 			return false;
 		}
     	
+    }
+    
+    public JFrame getFrame(){
+    	return frame;
     }
     
     private class Mouse extends MouseAdapter{

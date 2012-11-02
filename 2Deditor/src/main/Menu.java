@@ -2,17 +2,12 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -25,9 +20,10 @@ public class Menu {
 	
 	JButton pencil, line, rectangle;
 	 
-	public Menu(JFrame frame, Paint2d paint){
-		this.frame = frame;
+	public Menu(Paint2d paint){
+		
 		this.paint = paint;
+		this.frame = paint.getFrame();
 	}
 
 	public void createMenu(){
@@ -46,7 +42,7 @@ public class Menu {
 		
 		
 		menuItem = new JMenuItem("Open");
-		menuItem.addActionListener(openImage());
+		menuItem.addActionListener(new OpenFileDialog(paint));
 		menu.add(menuItem);
 		menu.addSeparator();
 		menuItem = new JMenuItem("New");
@@ -76,7 +72,7 @@ public class Menu {
 		menuBar.add(menu);
 		
 		
-		
+		//UNDO button and action
 		ActionListener actionUndo = new ActionListener() {
 			
 			@Override
@@ -210,34 +206,6 @@ public class Menu {
 			pencil.setBackground(Color.WHITE);
 			rectangle.setBackground(Color.WHITE);
 		}
-	}
-	
-	private ActionListener openImage(){
-		return new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				 JFileChooser fc = new JFileChooser();
-				 fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-				 //fc.showOpenDialog(frame);
-				 if (fc.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
-		                File file = fc.getSelectedFile();
-		                try {
-							Image image = ImageIO.read(file);
-							paint.addToDrawList(new graphics.Picture(image));
-							//frame.getContentPane().add(new JLabel(new ImageIcon(image))).setVisible(true);
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-		                
-		            } else {
-		               
-		            }
-		           
-			}
-		};
-		
 	}
 	
 }
