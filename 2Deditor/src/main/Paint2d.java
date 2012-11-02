@@ -17,6 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 public class Paint2d extends JPanel{
 
@@ -31,14 +33,20 @@ public class Paint2d extends JPanel{
     //String[] shapes = {"line", "rectangle"};
     public static String defaultShape = "pencil";
     int arrayIndex = 0, redoArrayIndex = 0;
+	Directions resizeDirection;
     static JLabel statusLabel;
+    static JPanel panel;
+    static JComponent drawingArea;
+    private boolean resizeDrawingArea = false, drawing = false;
+    static MouseAdapter mouseEventsHandler;
+    private enum Directions {
+    	HORIZONTAL,
+    	VERTICAL,
+    	BOTH
+    }
     
     public Paint2d() {        
-        addMouseMotionListener(new MouseMotion());
-        addMouseListener(new Mouse());
-        
-        setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
-
+    mouseEventsHandler = new Mouse();
     }
 
     @Override
@@ -48,7 +56,6 @@ public class Paint2d extends JPanel{
 
         setBackground(Color.white);
         g2.setPaint(Color.black);
-
         for (GraphicsObject go : drawList) {
             if(go instanceof Line){
             	int[] a = go.getStartEndXY();
@@ -96,14 +103,30 @@ public class Paint2d extends JPanel{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(720, 480);
         Paint2d paint = new Paint2d();
+        
         //Vytvorenie menu
         Menu menu = new Menu(frame, paint);
         menu.createMenu();
         //Create and set up the content pane.
-        JComponent newContentPane = paint;
-        newContentPane.setOpaque(true); //content panes must be opaque
-        //frame.setContentPane(newContentPane);
-        frame.add(newContentPane);
+        panel = new JPanel();
+        panel.addMouseListener(mouseEventsHandler);
+        panel.addMouseMotionListener(mouseEventsHandler);
+        
+        panel.setLayout(null);
+        panel.setBackground(Color.GRAY);
+        drawingArea = paint;
+        
+        Border drawingAreaBorder = new LineBorder(Color.RED,1);
+        
+        drawingArea.setBorder(drawingAreaBorder);
+        
+        panel.setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
+        
+        drawingArea.setSize(480,320);
+        drawingArea.setOpaque(true); //content panes must be opaque
+        panel.add(drawingArea);
+        frame.add(panel);
+        
         //Bottom status bar
         JPanel statusBar = new JPanel();
         statusBar.setBorder(new BevelBorder(BevelBorder.LOWERED));
@@ -162,8 +185,61 @@ public class Paint2d extends JPanel{
     	}
     }
     
-    private class Mouse implements MouseListener{
+    private boolean mouseInAreaCheck(int x, int y){
+		int width = drawingArea.getWidth();
+		int height = drawingArea.getHeight();
+    	if( (x >= width && x <= width+1) && (y >= height && y <= height+1)) {
+			resizeDirection = Directions.BOTH;
+			panel.setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));
+			return true;
+		} else if(x >= width && x <= width+1){
+			resizeDirection = Directions.HORIZONTAL;
+			panel.setCursor(new Cursor(Cursor.E_RESIZE_CURSOR));
+			return true;
+		} else if(y >= height && y <= height+1){
+			resizeDirection = Directions.VERTICAL;
+			panel.setCursor(new Cursor(Cursor.S_RESIZE_CURSOR));
+			return true;
+		} else {
+			panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			return false;
+		}
+    	
+    }
+    
+    private class Mouse extends MouseAdapter{
 
+    	@Override
+		public void mouseMoved(MouseEvent e) {
+			int x = e.getX(); int y = e.getY();
+    		statusLabel.setText("Cursor position X: " + x + "px Y: " + y + "px");
+			mouseInAreaCheck(x, y);
+    	}
+    	
+    	@Override
+		public void mouseDragged(MouseEvent e) {
+    		releasedCoordX = e.getX();
+    		releasedCoordY = e.getY();
+    		if(drawing == true){
+                drawList.get(arrayIndex).setFinalCoordinates(releasedCoordX, releasedCoordY);
+                
+    		} else if (resizeDrawingArea) {
+				switch(resizeDirection){
+				case HORIZONTAL:
+					drawingArea.setSize(releasedCoordX, drawingArea.getHeight());
+					break;
+				case VERTICAL:
+					drawingArea.setSize(drawingArea.getWidth(), releasedCoordY);
+					break;
+				case BOTH:
+					drawingArea.setSize(releasedCoordX, releasedCoordY);
+					break;
+				}
+			}
+    		statusLabel.setText("Cursor position X: " + releasedCoordX + "px Y: " + releasedCoordY + "px");
+    		repaint();
+		}
+    	
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
@@ -184,56 +260,47 @@ public class Paint2d extends JPanel{
 		@Override
 		public void mousePressed(MouseEvent e) {
 			if (e.getButton() == MouseEvent.BUTTON1) {
-	            startCoordX = clickedCoordX = e.getX();
-	            startCoordY = clickedCoordY = e.getY();
-	            System.out.println(defaultShape);
-	            switch (defaultShape) {
-				case "line":
-					drawList.add(new Line(startCoordX, startCoordY, startCoordX, startCoordY));
-					break;
-				case "rectangle":
-					drawList.add(new graphics.Rectangle(startCoordX, startCoordY, startCoordX, startCoordY));
-					System.out.println("Kreslim obdlznik");
-					break;
-				case "pencil":
-					drawList.add(new graphics.Pencil(startCoordX, startCoordY, 0, 0));
-					System.out.println("Kreslim ceruzkou");
-					break;
-				default:
-					drawList.add(new Line(startCoordX, startCoordY, startCoordX, startCoordY));
-					break;
-				}   
+				clickedCoordX = e.getX();
+	            clickedCoordY = e.getY();
+	            startCoordX = clickedCoordX;
+	            startCoordY = clickedCoordY;
+	            if(!mouseInAreaCheck(clickedCoordX, clickedCoordY)){
+	            	drawing = true;
+	            	System.out.println(defaultShape);
+		            switch (defaultShape) {
+					case "line":
+						drawList.add(new Line(startCoordX, startCoordY, startCoordX, startCoordY));
+						break;
+					case "rectangle":
+						drawList.add(new graphics.Rectangle(startCoordX, startCoordY, startCoordX, startCoordY));
+						System.out.println("Kreslim obdlznik");
+						break;
+					case "pencil":
+						drawList.add(new graphics.Pencil(startCoordX, startCoordY, 0, 0));
+						System.out.println("Kreslim ceruzkou");
+						break;
+					default:
+						drawList.add(new Line(startCoordX, startCoordY, startCoordX, startCoordY));
+						break;
+					}   
+	            } else {
+	            	resizeDrawingArea = true;
+	            }
 	        }
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			if (e.getButton() == MouseEvent.BUTTON1) {
+			if (drawing) {
 	            releasedCoordX = e.getX();
 	            releasedCoordY = e.getY();
 	            drawList.get(arrayIndex).setFinalCoordinates(releasedCoordX, releasedCoordY);
 	            repaint();
 	            arrayIndex++;
-	        }
-		}
-    	
-    }
-    
-    private class MouseMotion implements MouseMotionListener{
-    	@Override
-		public void mouseMoved(MouseEvent e) {
-			statusLabel.setText("Cursor position X: " + e.getX() + "px Y: " + e.getY() + "px");
-		}
-		
-		@Override
-		public void mouseDragged(MouseEvent e) {
-			releasedCoordX = e.getX();
-            releasedCoordY = e.getY();
-            System.out.println("Motion X: " + releasedCoordX + " Motion Y: "
-            		+ releasedCoordY);
-            drawList.get(arrayIndex).setFinalCoordinates(releasedCoordX, releasedCoordY);
-            repaint();
-			
+	            drawing = false;
+	        } else if (resizeDrawingArea) {
+				resizeDrawingArea = false;
+			}
 		}
     }
 }
