@@ -34,28 +34,10 @@ public class Paint2d extends JPanel{
     static JLabel statusLabel;
     
     public Paint2d() {        
-        addMouseMotionListener(new MouseMotionListener() {
-			
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				statusLabel.setText("Cursor position X: " + e.getX() + "px Y: " + e.getY() + "px");
-			}
-			
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				releasedCoordX = e.getX();
-                releasedCoordY = e.getY();
-                System.out.println("Motion X: " + releasedCoordX + " Motion Y: "
-                		+ releasedCoordY);
-                drawList.get(arrayIndex).setFinalCoordinates(releasedCoordX, releasedCoordY);
-                repaint();
-				
-			}
-		});
-
+        addMouseMotionListener(new MouseMotion());
         addMouseListener(new Mouse());
+        
         setPreferredSize(new Dimension(frame.getWidth(), frame.getHeight()));
-        //setSize(new Dimension(720, 480));
 
     }
 
@@ -102,7 +84,7 @@ public class Paint2d extends JPanel{
             }
             
             if (go instanceof Picture){
-            	g2.drawImage(((Picture) go).getImage().getScaledInstance(frame.getContentPane().getWidth(), frame.getContentPane().getHeight(), Image.SCALE_SMOOTH), 0, 0, null);
+            	g2.drawImage(((Picture) go).getImage(), 0,0,null);//.getScaledInstance(frame.getContentPane().getWidth(), frame.getContentPane().getHeight(), Image.SCALE_SMOOTH), 0, 0, null);
             }
         }
     }
@@ -235,5 +217,23 @@ public class Paint2d extends JPanel{
 	        }
 		}
     	
+    }
+    
+    private class MouseMotion implements MouseMotionListener{
+    	@Override
+		public void mouseMoved(MouseEvent e) {
+			statusLabel.setText("Cursor position X: " + e.getX() + "px Y: " + e.getY() + "px");
+		}
+		
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			releasedCoordX = e.getX();
+            releasedCoordY = e.getY();
+            System.out.println("Motion X: " + releasedCoordX + " Motion Y: "
+            		+ releasedCoordY);
+            drawList.get(arrayIndex).setFinalCoordinates(releasedCoordX, releasedCoordY);
+            repaint();
+			
+		}
     }
 }
