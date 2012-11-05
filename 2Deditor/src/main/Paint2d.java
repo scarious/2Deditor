@@ -54,7 +54,7 @@ public class Paint2d extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g2 = (Graphics2D) g;
-
+       // g2.getPaint().
         setBackground(Color.white);
         g2.setPaint(Color.black);
         for (GraphicsObject go : drawList) {
@@ -104,9 +104,7 @@ public class Paint2d extends JPanel {
         frame.setSize(720, 480);
         Paint2d paint = new Paint2d();
 
-        //Vytvorenie menu
-        Menu menu = new Menu(paint);
-        menu.createMenu();
+           
         //Create and set up the content pane.
         panel = new JPanel();
         panel.addMouseListener(mouseEventsHandler);
@@ -127,6 +125,10 @@ public class Paint2d extends JPanel {
         panel.add(drawingArea);
         frame.add(panel);
 
+        //Vytvorenie menu
+        Menu menu = new Menu(paint);
+        menu.createMenu();
+        
         //Bottom status bar
         JPanel statusBar = new JPanel();
         statusBar.setBorder(new BevelBorder(BevelBorder.LOWERED));
@@ -209,6 +211,10 @@ public class Paint2d extends JPanel {
 
     public JFrame getFrame() {
         return frame;
+    }
+    
+    public JComponent getDrawingArea(){
+    	return drawingArea;
     }
 
     private class Mouse extends MouseAdapter {

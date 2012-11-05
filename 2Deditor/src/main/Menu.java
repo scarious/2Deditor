@@ -2,7 +2,6 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -10,7 +9,6 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -47,10 +45,9 @@ public class Menu {
 		menu.add(menuItem);
 		menu.addSeparator();
                 
-                menuItem = new JMenuItem("Save");
-                menuItem.addActionListener(new SaveFileDialog(paint));
-                
-                menu.add(menuItem);
+		menuItem = new JMenuItem("Save as...");
+        menuItem.addActionListener(new SaveFileDialog(paint));
+        menu.add(menuItem);
 		menu.addSeparator();
                 
 		menuItem = new JMenuItem("New");

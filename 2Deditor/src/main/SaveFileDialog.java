@@ -1,23 +1,21 @@
 package main;
 
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
+import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileFilter;
+
 
 public class SaveFileDialog implements ActionListener {
 
@@ -27,96 +25,79 @@ public class SaveFileDialog implements ActionListener {
     FileFilter fileFilter;
     JTextPane textWidth, textHeight;
     Graphics2D g2;
+    JComponent drawingArea;
 
     public SaveFileDialog(main.Paint2d paint) {
         this.paint = paint;
         this.frame = paint.getFrame();
         fc = new JFileChooser();
+        drawingArea = paint.getDrawingArea();//JComponent na ktory sa kresli
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
-
-        String button = e.getActionCommand();
-        int val;
-        boolean exists;
-        //set the current directory the application's current directory  
-        try {
-            //create a file object containing the cannonical path of the desired file   
-            File f = new File(new File("").getCanonicalPath());
-            //set the selected file  
-            fc.setSelectedFile(f);
-        } catch (IOException ex) {
-        }
-        if (button.equals("Save")) {
-            //show the dialog; wait until dialog is closed  
-            val = fc.showSaveDialog(null);
-            //Approve(Save was clicked)  
-            if (val == JFileChooser.APPROVE_OPTION) {
-                //get the currently selected file  
-                File thefile = fc.getSelectedFile();
-                String nameOfFile = "";
-                nameOfFile = thefile.getPath();
-                //check if the file exists  
-                exists = (new File(nameOfFile)).exists();
-                if (!exists) {
-
-                    try {
-                       
-                         BufferedImage bi = new BufferedImage(paint.getWidth(), paint.getHeight(), BufferedImage.TYPE_INT_ARGB);
-
-                         
-                       
-                        ImageIO.write(bi, "jpg", new File(nameOfFile));
-
-                    } catch (IOException ex1) {
-                    }
-                } 
-            }
-        }
-    }
-               
         
-    //end of ActionPerformed method  
-    //end of action listener  
-
-    private class myFileFilter2 extends FileFilter {
-
-        @Override
-        public boolean accept(File arg0) {
-            if (arg0.isDirectory()) {
-                return true;
-            }
-
-            String extension;
-            try {
-                extension = arg0.getCanonicalPath();
-                if (extension != null) {
-                    if (extension.endsWith(".tiff")
-                            || extension.endsWith(".tif")
-                            || extension.endsWith(".gif")
-                            || extension.endsWith(".jpeg")
-                            || extension.endsWith(".jpg")
-                            || extension.endsWith(".png")
-                            || extension.endsWith(".bmp")) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-
-            return false;
-        }
-
-        @Override
-        public String getDescription() {
-            return "All Images";
+        //typ dialogoveho okna = ukladanie suborov
+        fc.setDialogType(JFileChooser.SAVE_DIALOG);
+        //v prehlade suborov sa budu zobrazovat aj subory aj adresare
+        fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        
+        PngFilter pngFilter = new PngFilter(); 
+		//vyber typov suborov
+        fc.addChoosableFileFilter(pngFilter);
+        fc.setFileFilter(pngFilter);
+        
+        //vsetko v if(...) sa vykona ak kliknes na Save tlacitko
+        if (fc.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
+              BufferedImage bi = new BufferedImage(drawingArea.getWidth()-1, drawingArea.getHeight()-1, BufferedImage.TYPE_INT_ARGB);
+              
+              //treba dat prec najskor to cervene ohranicenie inac to s nim uklada, potom nizsie sa to ohranici naspat
+              //vidiet to nikto nebude lebo sa nevola repaint 
+              drawingArea.setBorder(null); 
+              drawingArea.paint(bi.getGraphics());
+              try {
+            	//ulozenie obrazku na cestu ktoru dostane z okna na ukladanie  
+				ImageIO.write(bi, pngFilter.getExtension(), new File(fc.getSelectedFile().getCanonicalPath() + "." + pngFilter.getExtension())); 
+			} catch (IOException e1) {
+			}
+             drawingArea.setBorder(new LineBorder(Color.RED, 1));  
         }
     }
+    
+    private class PngFilter extends FileFilter{
+
+		@Override
+		public boolean accept(File arg0) {
+			if (arg0.isDirectory()) {
+		        return true;
+		    }
+
+		    String extension;
+			try {
+				extension = arg0.getCanonicalPath();
+				if (extension != null) {
+			        if (extension.endsWith(".png")) {
+			                return true;
+			        } else {
+			            return false;
+			        }
+			    }
+			} catch (IOException e) {
+				
+			}
+		    
+
+		    return false;
+		}
+
+		@Override
+		public String getDescription() {
+			return "*.png";
+		}
+		
+		public String getExtension(){
+			return "png";
+		}
+		
+	}
 }
