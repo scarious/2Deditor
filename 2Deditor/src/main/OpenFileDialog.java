@@ -85,39 +85,7 @@ public class OpenFileDialog implements ActionListener {
 			imageIconArea = new JPanel();
 			add(imageIconArea, BorderLayout.CENTER);
 			
-			
-			/*FocusListener focusListenerWidth = new FocusListener() {
-				
-				@Override
-				public void focusLost(FocusEvent e) {
-					//calculateRatio(Integer.parseInt(textWidth.getText().trim()),Integer.parseInt(textHeight.getText().trim()));
-					if(ratioBoxChecked){
-						String string = Float.toString(Math.round((Integer.parseInt(textWidth.getText().trim()) * imageRatio)));
-						textHeight.setText( string );
-					}
-				}
-				
-				@Override
-				public void focusGained(FocusEvent e) {
-					calculateRatio(Integer.parseInt(textWidth.getText().trim()),Integer.parseInt(textHeight.getText().trim()));
-				}
-			};
-			FocusListener focusListenerHeight = new FocusListener() {
-				
-				@Override
-				public void focusLost(FocusEvent e) {
-					calculateRatio(Integer.parseInt(textWidth.getText().trim()),Integer.parseInt(textHeight.getText().trim()));
-					if(ratioBoxChecked){
 						
-					}
-				}
-				
-				@Override
-				public void focusGained(FocusEvent e) {
-					calculateRatio(Integer.parseInt(textWidth.getText().trim()),Integer.parseInt(textHeight.getText().trim()));
-				}
-			};*/
-			
 			textWidth = new JTextPane();
 			//textWidth.addFocusListener(focusListenerWidth);
 			textHeight = new JTextPane();
@@ -136,26 +104,12 @@ public class OpenFileDialog implements ActionListener {
 			
 			final JCheckBox ratioCheckbox = new JCheckBox("Keep image proportions");
 			ratioCheckbox.setSelected(true);
-			/*ratioCheckbox.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent arg0) {
-					if(ratioCheckbox.isSelected()){
-						ratioBoxChecked = true;
-					} else if(!ratioCheckbox.isSelected()){
-						ratioBoxChecked = false;
-					}
-				}
-			});*/
-			
+	
 			mainBox.add(ratioCheckbox);
 			add(mainBox, BorderLayout.SOUTH);
 			mainBox.setVisible(false);
 		}
 
-		/*public void calculateRatio(int width, int height){
-			imageRatio = width/height;
-		}*/
 		
 		public void loadImage() {
 			if (f == null || f.isDirectory()){

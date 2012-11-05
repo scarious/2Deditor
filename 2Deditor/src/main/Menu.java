@@ -2,12 +2,15 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -34,18 +37,22 @@ public class Menu {
 		JMenuItem menuItem;
 
 		menuBar = new JMenuBar();
-		
-		
+
 		//menu File
 		menu = new JMenu("File");
 		menuBar.add(menu);
 
-		
-		
 		menuItem = new JMenuItem("Open");
 		menuItem.addActionListener(new OpenFileDialog(paint));
 		menu.add(menuItem);
 		menu.addSeparator();
+                
+                menuItem = new JMenuItem("Save");
+                menuItem.addActionListener(new SaveFileDialog(paint));
+                
+                menu.add(menuItem);
+		menu.addSeparator();
+                
 		menuItem = new JMenuItem("New");
 		menuItem.addActionListener(new ActionListener() {
 			
@@ -105,6 +112,8 @@ public class Menu {
 			public void actionPerformed(ActionEvent e) {
 				Paint2d.defaultShape = "pencil";
 				System.out.println("Drawing: pencil");
+                                
+                          
 			}
 		};
 		menu.add(menuItem);
