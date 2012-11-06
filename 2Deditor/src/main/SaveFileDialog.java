@@ -43,8 +43,10 @@ public class SaveFileDialog implements ActionListener {
         fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         
         PngFilter pngFilter = new PngFilter(); 
-		//vyber typov suborov
+        JpgFilter jpgFilter = new JpgFilter();
+        //vyber typov suborov
         fc.addChoosableFileFilter(pngFilter);
+        fc.addChoosableFileFilter(jpgFilter);
         fc.setFileFilter(pngFilter);
         
         //vsetko v if(...) sa vykona ak kliknes na Save tlacitko
@@ -56,8 +58,8 @@ public class SaveFileDialog implements ActionListener {
               drawingArea.setBorder(null); 
               drawingArea.paint(bi.getGraphics());
               try {
+            	  ImageIO.write(bi, pngFilter.getExtension(), new File(fc.getSelectedFile().getCanonicalPath() + "." + pngFilter.getExtension())); 
             	//ulozenie obrazku na cestu ktoru dostane z okna na ukladanie  
-				ImageIO.write(bi, pngFilter.getExtension(), new File(fc.getSelectedFile().getCanonicalPath() + "." + pngFilter.getExtension())); 
 			} catch (IOException e1) {
 			}
              drawingArea.setBorder(new LineBorder(Color.RED, 1));  
@@ -100,4 +102,42 @@ public class SaveFileDialog implements ActionListener {
 		}
 		
 	}
+
+    private class JpgFilter extends FileFilter{
+
+		@Override
+		public boolean accept(File arg0) {
+			if (arg0.isDirectory()) {
+		        return true;
+		    }
+
+		    String extension;
+			try {
+				extension = arg0.getCanonicalPath();
+				if (extension != null) {
+			        if (extension.endsWith(".jpg")) {
+			                return true;
+			        } else {
+			            return false;
+			        }
+			    }
+			} catch (IOException e) {
+				
+			}
+		    
+
+		    return false;
+		}
+
+		@Override
+		public String getDescription() {
+			return "*.jpg";
+		}
+		
+		public String getExtension(){
+			return "jpg";
+		}
+		
+	}
+
 }
