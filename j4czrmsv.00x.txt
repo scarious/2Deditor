@@ -1,0 +1,24 @@
+Merge branch 'dev' of github.com:scarious/2Deditor into dev
+
+Conflicts:
+	2Deditor/src/graphics/Rectangle.java
+	2Deditor/src/main/Paint2d.java
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch dev
+# Your branch is ahead of 'origin/dev' by 2 commits.
+#
+# Changes to be committed:
+#
+#	modified:   ../graphics/Rectangle.java
+#	modified:   Paint2d.java
+#	modified:   SaveFileDialog.java
+#
+
