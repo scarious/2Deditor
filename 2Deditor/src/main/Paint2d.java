@@ -1,13 +1,14 @@
 package main;
 
 import graphics.GraphicsObject;
-import graphics.Line;
 import graphics.Pencil;
 import graphics.Picture;
+import graphics.Line;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -24,7 +25,7 @@ public class Paint2d extends JPanel {
 
     private static final long serialVersionUID = -2657788641031074891L;
     private Graphics2D g2;
-    private int startCoordX, startCoordY, clickedCoordX, clickedCoordY, releasedCoordX, releasedCoordY;
+    private int startCoordX, startCoordY, clickedCoordX, clickedCoordY, releasedCoordX, releasedCoordY, editCoordX, editCoordY;
     private ArrayList<GraphicsObject> drawList = new ArrayList<GraphicsObject>();
     private ArrayList<GraphicsObject> redoDrawList = new ArrayList<GraphicsObject>();
     JTextArea textArea;
@@ -38,6 +39,10 @@ public class Paint2d extends JPanel {
     static JComponent drawingArea;
     private boolean resizeDrawingArea = false, drawing = false;
     static MouseAdapter mouseEventsHandler;
+    private boolean moving = false;
+    private boolean isRectangle = false;
+    private graphics.Rectangle rect;
+    private int objectIndex, coordStartXbeforeEdit, coordStartYbeforeEdit, coordFinalYbeforeEdit, coordFinalXbeforeEdit;
 
     private enum Directions {
 
@@ -54,7 +59,7 @@ public class Paint2d extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g2 = (Graphics2D) g;
-       // g2.getPaint().
+        // g2.getPaint().
         setBackground(Color.white);
         g2.setPaint(Color.black);
         for (GraphicsObject go : drawList) {
@@ -104,7 +109,7 @@ public class Paint2d extends JPanel {
         frame.setSize(720, 480);
         Paint2d paint = new Paint2d();
 
-           
+
         //Create and set up the content pane.
         panel = new JPanel();
         panel.addMouseListener(mouseEventsHandler);
@@ -128,7 +133,7 @@ public class Paint2d extends JPanel {
         //Vytvorenie menu
         Menu menu = new Menu(paint);
         menu.createMenu();
-        
+
         //Bottom status bar
         JPanel statusBar = new JPanel();
         statusBar.setBorder(new BevelBorder(BevelBorder.LOWERED));
@@ -212,9 +217,9 @@ public class Paint2d extends JPanel {
     public JFrame getFrame() {
         return frame;
     }
-    
-    public JComponent getDrawingArea(){
-    	return drawingArea;
+
+    static JComponent getDrawingArea() {
+        return drawingArea;
     }
 
     private class Mouse extends MouseAdapter {
@@ -226,13 +231,13 @@ public class Paint2d extends JPanel {
             statusLabel.setText("Cursor position X: " + x + "px Y: " + y + "px");
             mouseInAreaCheck(x, y);
         }
-
         @Override
         public void mouseDragged(MouseEvent e) {
             releasedCoordX = e.getX();
             releasedCoordY = e.getY();
             if (drawing == true) {
                 drawList.get(arrayIndex).setFinalCoordinates(releasedCoordX, releasedCoordY);
+
 
             } else if (resizeDrawingArea) {
                 switch (resizeDirection) {
@@ -247,6 +252,23 @@ public class Paint2d extends JPanel {
                         break;
                 }
             }
+
+            if (moving) {
+           //     System.out.println(drawList.get(objectIndex).getFixReleasedCoordX());
+                drawList.get(objectIndex).changeCoord(
+                        (drawList.get(objectIndex).getFixStartCoordX() + (releasedCoordX - editCoordX)),
+                        (drawList.get(objectIndex).getFixStartCoordY() + (releasedCoordY - editCoordY)),
+                        (drawList.get(objectIndex).getFixReleasedCoordX() + (releasedCoordX - editCoordX)),
+                        (drawList.get(objectIndex).getFixReleasedCoordY() + (releasedCoordY - editCoordY)));
+
+                
+             //   System.out.println("Lavy horny roh" + (drawList.get(objectIndex).getFixStartCoordX() + (e.getX() - editCoordX)));
+               // System.out.println("Pravy horny roh" + (drawList.get(objectIndex).getFixReleasedCoordX() + (e.getX() - editCoordX)));
+//                System.out.println("Lavy dolny roh"+ (drawList.get(objectIndex).getStartEndXY()[1] + (e.getX() - editCoordX)));
+
+            }
+
+
             statusLabel.setText("Cursor position X: " + releasedCoordX + "px Y: " + releasedCoordY + "px");
             repaint();
         }
@@ -266,6 +288,38 @@ public class Paint2d extends JPanel {
             // TODO Auto-generated method stub
         }
 
+        public void editObject(int CoordX, int CoordY) {
+            isRectangle = false;
+            objectIndex = 0;
+
+
+            for (GraphicsObject go : drawList) {
+                if (go instanceof graphics.Rectangle) {
+                    if ((CoordX >= go.getStartEndXY()[0]
+                            && CoordX <= go.getStartEndXY()[2])
+                            && (CoordY >= go.getStartEndXY()[1]
+                            && (CoordY <= go.getStartEndXY()[3]))) {
+//                        coordStartXbeforeEdit = go.getStartEndXY()[0];
+//                        coordStartYbeforeEdit = go.getStartEndXY()[1];
+//                        coordFinalXbeforeEdit = go.getStartEndXY()[2];
+//                        coordFinalYbeforeEdit = go.getStartEndXY()[3];
+
+                        isRectangle = true;
+                        rect = (graphics.Rectangle) drawList.get(objectIndex);
+                        break;
+                    }
+                    objectIndex++;
+                }
+            }
+
+
+            if (isRectangle) {
+                System.out.println("Je to obldznik");
+            } else {
+                System.out.println("Nieje to obdlznik");
+            }
+        }
+
         @Override
         public void mousePressed(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1) {
@@ -274,20 +328,39 @@ public class Paint2d extends JPanel {
                 startCoordX = clickedCoordX;
                 startCoordY = clickedCoordY;
                 if (!mouseInAreaCheck(clickedCoordX, clickedCoordY)) {
-                    drawing = true;
+
                     System.out.println(defaultShape);
                     switch (defaultShape) {
                         case "line":
+                            drawing = true;
+                            moving = false;
                             drawList.add(new Line(startCoordX, startCoordY, startCoordX, startCoordY));
                             break;
                         case "rectangle":
+                            drawing = true;
+                            moving = false;
                             drawList.add(new graphics.Rectangle(startCoordX, startCoordY, startCoordX, startCoordY));
                             System.out.println("Kreslim obdlznik");
                             break;
                         case "pencil":
+                            drawing = true;
+                            moving = false;
                             drawList.add(new graphics.Pencil(startCoordX, startCoordY, 0, 0));
                             System.out.println("Kreslim ceruzkou");
                             break;
+                        case "edit":
+                            drawing = false;
+                            moving = true;
+                            editCoordX = e.getX();
+                            editCoordY = e.getY();
+                            editObject(clickedCoordX, clickedCoordY);
+                           // drawList.remove(objectIndex);
+                            System.out.println(objectIndex);
+                            break;
+                            
+
+
+
                         default:
                             drawList.add(new Line(startCoordX, startCoordY, startCoordX, startCoordY));
                             break;
@@ -304,12 +377,15 @@ public class Paint2d extends JPanel {
                 releasedCoordX = e.getX();
                 releasedCoordY = e.getY();
                 drawList.get(arrayIndex).setFinalCoordinates(releasedCoordX, releasedCoordY);
+                drawList.get(arrayIndex).setFixReleasedCoordX(releasedCoordX);
+                drawList.get(arrayIndex).setFixReleasedCoordY(releasedCoordY);
                 repaint();
                 arrayIndex++;
                 drawing = false;
             } else if (resizeDrawingArea) {
                 resizeDrawingArea = false;
             }
+
         }
     }
 }

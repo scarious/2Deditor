@@ -18,6 +18,7 @@ import javax.swing.filechooser.FileFilter;
 
 
 public class SaveFileDialog implements ActionListener {
+    private Paint2d painted;
 
     main.Paint2d paint;
     JFrame frame;

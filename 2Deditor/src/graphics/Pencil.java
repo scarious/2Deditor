@@ -29,4 +29,41 @@ public class Pencil implements GraphicsObject {
 		return coordinates;
 	}
 
+    @Override
+    public void changeCoord(int x1, int x2, int y1, int y2) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int getFixStartCoordX() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int getFixStartCoordY() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int getFixReleasedCoordX() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setFixReleasedCoordX(int x) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int getFixReleasedCoordY() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setFixReleasedCoordY(int x) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+
+
 }
