@@ -59,7 +59,7 @@ public class SaveFileDialog implements ActionListener {
               drawingArea.setBorder(null); 
               drawingArea.paint(bi.getGraphics());
               try {
-            	  ImageIO.write(bi, pngFilter.getExtension(), new File(fc.getSelectedFile().getCanonicalPath() + "." + pngFilter.getExtension())); 
+            	  ImageIO.write(bi, fc.getFileFilter().getDescription(), new File(fc.getSelectedFile().getCanonicalPath() + "." + fc.getFileFilter().getDescription())); 
             	//ulozenie obrazku na cestu ktoru dostane z okna na ukladanie  
 			} catch (IOException e1) {
 			}
@@ -95,13 +95,8 @@ public class SaveFileDialog implements ActionListener {
 
 		@Override
 		public String getDescription() {
-			return "*.png";
-		}
-		
-		public String getExtension(){
 			return "png";
 		}
-		
 	}
 
     private class JpgFilter extends FileFilter{
@@ -132,13 +127,8 @@ public class SaveFileDialog implements ActionListener {
 
 		@Override
 		public String getDescription() {
-			return "*.jpg";
-		}
-		
-		public String getExtension(){
 			return "jpg";
 		}
-		
 	}
 
 }
