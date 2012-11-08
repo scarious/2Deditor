@@ -66,7 +66,7 @@ public class Paint2d extends JPanel {
 
             if (go instanceof graphics.Rectangle) {
                 int[] a = go.getStartEndXY();
-                g2.drawRect(a[4], a[5], a[2] - a[4], a[3] - a[5]);
+                g2.drawRect(a[0], a[1], a[2], a[3]);
             }
 
             if (go instanceof Pencil) {
@@ -217,7 +217,7 @@ public class Paint2d extends JPanel {
     	return drawingArea;
     }
 
-    private class Mouse extends MouseAdapter {
+    private class Mouse extends MouseAdapter  {
 
         @Override
         public void mouseMoved(MouseEvent e) {
@@ -269,11 +269,9 @@ public class Paint2d extends JPanel {
         @Override
         public void mousePressed(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1) {
-                clickedCoordX = e.getX();
-                clickedCoordY = e.getY();
-                startCoordX = clickedCoordX;
-                startCoordY = clickedCoordY;
-                if (!mouseInAreaCheck(clickedCoordX, clickedCoordY)) {
+            	startCoordX = e.getX();
+            	startCoordY = e.getY();
+            	if (!mouseInAreaCheck(clickedCoordX, clickedCoordY)) {
                     drawing = true;
                     System.out.println(defaultShape);
                     switch (defaultShape) {
