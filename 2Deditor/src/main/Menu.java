@@ -2,6 +2,8 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -138,6 +140,7 @@ public class Menu {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Paint2d.defaultShape = "rectangle";
+                rectangle.setBackground(Color.LIGHT_GRAY);
                 System.out.println("Drawing: rectangle");
             }
         };
@@ -149,6 +152,7 @@ public class Menu {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Paint2d.defaultShape = "edit";
+                edit.setBackground(Color.LIGHT_GRAY);
                 System.out.println("Editing objec");
             }
         };
@@ -211,7 +215,7 @@ public class Menu {
         rectangle.addActionListener(actionRectangle);
         toolBar.add(rectangle);
 
-         url = Paint2d.class.getClassLoader().getResource("rectangleIcon.gif");
+         url = Paint2d.class.getClassLoader().getResource("targetIcon.gif");
         icon = new ImageIcon(url);
         edit = new JButton(icon);
         edit.addActionListener(shapeButtonsListener);

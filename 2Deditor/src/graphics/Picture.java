@@ -64,4 +64,14 @@ public class Picture implements GraphicsObject{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
+    public void setFixStartCoordX(int x) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setFixStartCoordY(int x) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }

@@ -13,12 +13,12 @@ public interface GraphicsObject {
      * @return the FixStartCoordX
      */
     public int getFixStartCoordX();
-
+public void setFixStartCoordX(int x);
     /**
      * @return the FixStartCoordY
      */
     public int getFixStartCoordY();
-   
+   public void setFixStartCoordY(int x);
 
     /**
      * @return the FixReleasedCoordX
