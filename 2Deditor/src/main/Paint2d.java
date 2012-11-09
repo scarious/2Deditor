@@ -40,7 +40,11 @@ public class Paint2d extends JPanel {
     private boolean resizeDrawingArea = false, drawing = false;
     static MouseAdapter mouseEventsHandler;
     private boolean moving = false;
+<<<<<<< HEAD
     private boolean isRectangle = false;
+=======
+    private boolean isObject = false;
+>>>>>>> master
     private graphics.Rectangle rect;
     private int objectIndex, coordStartXbeforeEdit, coordStartYbeforeEdit, coordFinalYbeforeEdit, coordFinalXbeforeEdit;
     private int newStartCoordX, newStartCoordY, newFinalCoordX, newFinalCoordY;
@@ -73,6 +77,11 @@ public class Paint2d extends JPanel {
             if (go instanceof graphics.Rectangle) {
                 int[] a = go.getStartEndXY();
                 g2.drawRect(a[0], a[1], a[2], a[3]);
+<<<<<<< HEAD
+=======
+              
+                
+>>>>>>> master
             }
 
             if (go instanceof Pencil) {
@@ -168,6 +177,18 @@ public class Paint2d extends JPanel {
         drawList.add(graphicsObject);
         arrayIndex++;
         repaint();
+<<<<<<< HEAD
+    }
+
+    public void undoAction() {
+        if (arrayIndex > 0) {
+            //pred krokom naspat prida odstranovany objekt do druheho zoznamu
+            redoDrawList.add(drawList.get(arrayIndex - 1));
+            redoArrayIndex++;
+
+            drawList.remove(arrayIndex - 1);
+            arrayIndex--;
+=======
     }
 
     public void undoAction() {
@@ -182,6 +203,19 @@ public class Paint2d extends JPanel {
         }
     }
 
+    public void redoAction() {
+        if (redoArrayIndex > 0) {
+            drawList.add(redoDrawList.get(redoArrayIndex - 1));
+            arrayIndex++;
+
+            redoDrawList.remove(redoArrayIndex - 1);
+            redoArrayIndex--;
+>>>>>>> master
+            repaint();
+        }
+    }
+
+<<<<<<< HEAD
     public void redoAction() {
         if (redoArrayIndex > 0) {
             drawList.add(redoDrawList.get(redoArrayIndex - 1));
@@ -223,6 +257,38 @@ public class Paint2d extends JPanel {
         return drawingArea;
     }
 
+=======
+    private boolean mouseInAreaCheck(int x, int y) {
+        int width = drawingArea.getWidth();
+        int height = drawingArea.getHeight();
+        if ((x >= width && x <= width + 1) && (y >= height && y <= height + 1)) {
+            resizeDirection = Directions.BOTH;
+            panel.setCursor(new Cursor(Cursor.SE_RESIZE_CURSOR));
+            return true;
+        } else if (x >= width && x <= width + 1) {
+            resizeDirection = Directions.HORIZONTAL;
+            panel.setCursor(new Cursor(Cursor.E_RESIZE_CURSOR));
+            return true;
+        } else if (y >= height && y <= height + 1) {
+            resizeDirection = Directions.VERTICAL;
+            panel.setCursor(new Cursor(Cursor.S_RESIZE_CURSOR));
+            return true;
+        } else {
+            panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            return false;
+        }
+
+    }
+
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    static JComponent getDrawingArea() {
+        return drawingArea;
+    }
+
+>>>>>>> master
     private class Mouse extends MouseAdapter {
 
         @Override
@@ -256,6 +322,7 @@ public class Paint2d extends JPanel {
                 }
             }
 
+<<<<<<< HEAD
             if (moving && isRectangle) {
 
 
@@ -266,6 +333,13 @@ public class Paint2d extends JPanel {
 //                        (drawList.get(objectIndex).getFixReleasedCoordX() + (releasedCoordX - editCoordX)),
 //                        (drawList.get(objectIndex).getFixReleasedCoordY() + (releasedCoordY - editCoordY)));
                 //     System.out.println(drawList.get(objectIndex).getFixReleasedCoordX());
+=======
+            if (moving && isObject) {
+                /*
+                 * pre zjednodusenie ulozim si do "lokalnych" premennych nove suradnice po pohnuti s objektom
+                 * neviem preco newStart/finalCoordX/Y su privatne moze sa to neskor zmenit
+                 */
+>>>>>>> master
                 newStartCoordX = (drawList.get(objectIndex).getFixStartCoordX() + (releasedCoordX - editCoordX));
                 newStartCoordY = (drawList.get(objectIndex).getFixStartCoordY() + (releasedCoordY - editCoordY));
                 newFinalCoordX = (drawList.get(objectIndex).getFixReleasedCoordX() + (releasedCoordX - editCoordX));
@@ -296,11 +370,46 @@ public class Paint2d extends JPanel {
             // TODO Auto-generated method stub
         }
 
+<<<<<<< HEAD
         public void editObject(int CoordX, int CoordY) {
             isRectangle = false;
             objectIndex = 0;
 
 
+=======
+         
+        /*
+         * vypocita ci bod na ktory som klikol patri objektu go, teda priamke
+         */
+        public boolean isPointOfLine(GraphicsObject go, int EditX, int EditY){
+            /*
+             * telo if-u mi vypliva z urcenia rovnice priamky. pocita to dobre akurat ked zacnem
+             * kreslit od vacsich suradnic tak nieco nehraje, mozno kapacita intu to si este odsledujem
+             */
+             if ((( -(((go.getFixReleasedCoordY()-go.getFixStartCoordY())*go.getFixStartCoordY()) -
+                     (go.getFixReleasedCoordX()-go.getFixStartCoordX())*go.getFixStartCoordX())+
+                     ((go.getFixReleasedCoordY()-go.getFixStartCoordY())*EditY) -
+                     (go.getFixReleasedCoordX()-go.getFixStartCoordX())*EditX)) == 0){
+                 
+            System.out.println("je to priamka");
+                 return true;
+            
+             }
+             
+             else{
+                 
+                 return false;
+             }
+         }   
+            
+            
+        
+        
+        public void editObject(int CoordX, int CoordY) {
+            isObject = false;
+            objectIndex = 0;
+
+>>>>>>> master
             for (GraphicsObject go : drawList) {
                 if (go instanceof graphics.Rectangle) {
                     if ((CoordX >= go.getStartEndXY()[0]
@@ -312,6 +421,7 @@ public class Paint2d extends JPanel {
 //                        coordFinalXbeforeEdit = go.getStartEndXY()[2];
 //                        coordFinalYbeforeEdit = go.getStartEndXY()[3];
 
+<<<<<<< HEAD
                         isRectangle = true;
                         rect = (graphics.Rectangle) drawList.get(objectIndex);
                         break;
@@ -326,6 +436,26 @@ public class Paint2d extends JPanel {
             } else {
                 System.out.println("Nieje to obdlznik");
             }
+=======
+                        isObject = true;
+                        System.out.println("Je to obdlznik");
+                      //  rect = (graphics.Rectangle) drawList.get(objectIndex);
+                        break;
+                    }
+                }
+                else if (go instanceof graphics.Line){
+                    
+                  if (isPointOfLine(go, CoordX, CoordY)){
+                      System.out.println("Je to ciara");
+                      isObject=true;
+                      break;
+                  }
+                   
+                }
+                objectIndex ++;
+            }
+
+>>>>>>> master
         }
 
         @Override
@@ -400,7 +530,11 @@ public class Paint2d extends JPanel {
                 resizeDrawingArea = false;
             }
 
+<<<<<<< HEAD
             if (moving && isRectangle) {
+=======
+            if (moving && isObject) {
+>>>>>>> master
 
 
 

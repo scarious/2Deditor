@@ -19,6 +19,11 @@ public class Rectangle implements GraphicsObject {
         height = 0;
     }
 
+<<<<<<< HEAD
+=======
+    
+
+>>>>>>> master
     @Override
     public void setFinalCoordinates(int x2, int y2) {
         currentX = x2; //aktualne x
@@ -29,6 +34,7 @@ public class Rectangle implements GraphicsObject {
             currentX = originalX;
         } else {
             startX = originalX;
+<<<<<<< HEAD
         }
 
         if (originalY > currentY) {	//startCoordY < releasedCoordY
@@ -36,6 +42,8 @@ public class Rectangle implements GraphicsObject {
             currentY = originalY;
         } else {
             startY = originalY;
+=======
+>>>>>>> master
         }
     }
 
@@ -89,6 +97,67 @@ public class Rectangle implements GraphicsObject {
         FixReleasedCoordY = x;
     }
 
+<<<<<<< HEAD
+=======
+        if (originalY > currentY) {	//startCoordY < releasedCoordY
+            startY = currentY;
+            currentY = originalY;
+        } else {
+            startY = originalY;
+        }
+    }
+
+    @Override
+    public void changeCoord(int x1, int y1, int x2, int y2) {
+        coordinates[0] =startX= x1;
+        coordinates[1] = startY=y1;
+
+        currentX = coordinates[2] = x2;
+        currentY = coordinates[3] = y2;
+
+
+    }
+
+    /**
+     * @return the FixStartCoordX
+     */
+    public int getFixStartCoordX() {
+        return FixStartCoordX;
+    }
+
+    /**
+     * @return the FixStartCoordY
+     */
+    public int getFixStartCoordY() {
+        return FixStartCoordY;
+    }
+
+    /**
+     * @return the FixReleasedCoordX
+     */
+    public int getFixReleasedCoordX() {
+        return FixReleasedCoordX;
+    }
+
+    /**
+     * @return the FixReleasedCoordY
+     */
+    public int getFixReleasedCoordY() {
+        return FixReleasedCoordY;
+    }
+
+   // @Override
+    public void setFixReleasedCoordX(int x) {
+        FixReleasedCoordX = x;
+
+    }
+
+    //@Override
+    public void setFixReleasedCoordY(int x) {
+        FixReleasedCoordY = x;
+    }
+
+>>>>>>> master
     @Override
     public int[] getStartEndXY() {
         if ((currentX - startX > 0) || (currentY - startY > 0)) {

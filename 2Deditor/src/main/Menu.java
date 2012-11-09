@@ -229,6 +229,7 @@ public class Menu {
     }
 
     private void checkedButtonColor() {
+<<<<<<< HEAD
         if (Paint2d.defaultShape.equals("pencil")) {
             pencil.setBackground(Color.LIGHT_GRAY);
             line.setBackground(Color.WHITE);
@@ -241,6 +242,24 @@ public class Menu {
             line.setBackground(Color.LIGHT_GRAY);
             pencil.setBackground(Color.WHITE);
             rectangle.setBackground(Color.WHITE);
+=======
+        switch (Paint2d.defaultShape) {
+            case "pencil":
+                pencil.setBackground(Color.LIGHT_GRAY);
+                line.setBackground(Color.WHITE);
+                rectangle.setBackground(Color.WHITE);
+                break;
+            case "rectangle":
+                rectangle.setBackground(Color.LIGHT_GRAY);
+                line.setBackground(Color.WHITE);
+                pencil.setBackground(Color.WHITE);
+                break;
+            default:
+                line.setBackground(Color.LIGHT_GRAY);
+                pencil.setBackground(Color.WHITE);
+                rectangle.setBackground(Color.WHITE);
+                break;
+>>>>>>> master
         }
     }
 }

@@ -40,38 +40,73 @@ public class Picture implements GraphicsObject{
     }
 
     @Override
+<<<<<<< HEAD
     public int getFixStartCoordY() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public int getFixReleasedCoordX() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setFixReleasedCoordX(int x) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public int getFixReleasedCoordY() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setFixReleasedCoordY(int x) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
+=======
     public void setFixStartCoordX(int x) {
+>>>>>>> master
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
+<<<<<<< HEAD
+    public int getFixReleasedCoordX() {
+=======
+    public int getFixStartCoordY() {
+>>>>>>> master
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+<<<<<<< HEAD
+    public void setFixReleasedCoordX(int x) {
+=======
+    public void setFixStartCoordY(int x) {
+>>>>>>> master
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+<<<<<<< HEAD
+    public int getFixReleasedCoordY() {
+=======
+    public int getFixReleasedCoordX() {
+>>>>>>> master
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+<<<<<<< HEAD
+    public void setFixReleasedCoordY(int x) {
+=======
+    public void setFixReleasedCoordX(int x) {
+>>>>>>> master
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+<<<<<<< HEAD
+    public void setFixStartCoordX(int x) {
+=======
+    public int getFixReleasedCoordY() {
+>>>>>>> master
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+<<<<<<< HEAD
     public void setFixStartCoordY(int x) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+=======
+    public void setFixReleasedCoordY(int x) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+   
+
+  
+
+>>>>>>> master
 }
