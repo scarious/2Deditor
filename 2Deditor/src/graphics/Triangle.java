@@ -1,8 +1,8 @@
 package graphics;
 
-public class Line implements GraphicsObject {
+public class Triangle implements GraphicsObject {
 
-    int[] coordinates = new int[4];
+    int[] coordinates = new int[5];
     private int startX;
     private int startY;
     private int currentX;
@@ -12,7 +12,7 @@ public class Line implements GraphicsObject {
     private int FixStartCoordX;
     private int FixStartCoordY;
 
-    public Line(int x1, int y1, int x2, int y2) {
+    public Triangle (int x1, int y1, int x2, int y2, int x3, int y3) {
         coordinates[0] = x1; //startCoordX
         coordinates[1] = y1; //startCoordY
         startX = x1;
@@ -89,3 +89,15 @@ public class Line implements GraphicsObject {
         FixReleasedCoordY = x;
     }
 }
+
+
+
+
+//x[0]=100; x[1]=150; x[2]=50;
+//y[0]=100; y[1]=150; y[2]=150;
+//n = 3;
+//
+//Polygon p = new Polygon(x, y, n);  // This polygon represents a triangle with the above
+//                                   //   vertices.
+//
+//g.fillPolygon(p); 

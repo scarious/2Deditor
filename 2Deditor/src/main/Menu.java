@@ -2,8 +2,6 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -21,7 +19,7 @@ public class Menu {
 
     JFrame frame;
     Paint2d paint;
-    JButton pencil, line, rectangle, edit;
+    JButton pencil, line, rectangle, edit, circle, elipse;
 
     public Menu(Paint2d paint) {
 
@@ -112,11 +110,10 @@ public class Menu {
                 Paint2d.defaultShape = "pencil";
                 System.out.println("Drawing: pencil");
 
-
             }
         };
-        menu.add(menuItem);
 
+        menu.add(menuItem);
         menuItem = new JMenuItem("Line |");
 
         ActionListener actionLine = new ActionListener() {
@@ -132,7 +129,7 @@ public class Menu {
 
         menuItem.addActionListener(actionLine);
         menu.add(menuItem);
-        
+
         menuItem = new JMenuItem("Rectangle []");
 
         ActionListener actionRectangle = new ActionListener() {
@@ -144,8 +141,36 @@ public class Menu {
                 System.out.println("Drawing: rectangle");
             }
         };
-        
-        menuItem = new JMenuItem("Edit :");
+
+
+        menuItem = new JMenuItem("Circle");
+
+        ActionListener actionCircle = new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Paint2d.defaultShape = "circle";
+                circle.setBackground(Color.LIGHT_GRAY);
+                System.out.println("Drawing: Circle");
+            }
+        };
+
+
+        menuItem = new JMenuItem("elipse");
+
+        ActionListener actionElipse = new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Paint2d.defaultShape = "elipse";
+                elipse.setBackground(Color.LIGHT_GRAY);
+                System.out.println("Drawing: Elipse");
+            }
+        };
+
+
+
+        menuItem = new JMenuItem("Edit");
 
         ActionListener actionEdit = new ActionListener() {
 
@@ -153,14 +178,14 @@ public class Menu {
             public void actionPerformed(ActionEvent e) {
                 Paint2d.defaultShape = "edit";
                 edit.setBackground(Color.LIGHT_GRAY);
-                System.out.println("Editing objec");
+                System.out.println("Editing object");
             }
         };
-        
+
 
         menuItem.addActionListener(actionEdit);
         menu.add(menuItem);
-        
+
 
         //Pridanie menu do menu-baru
         menuBar.add(menu);
@@ -169,6 +194,10 @@ public class Menu {
 
         //Toolbar s ikonami
         JToolBar toolBar = new JToolBar("ToolBar", JToolBar.HORIZONTAL);
+
+        JToolBar toolBarV = new JToolBar("ToolBar", JToolBar.VERTICAL);
+//        toolBarV.setAlignmentX(JToolBar.VERTICAL);
+
 
         URL url = Paint2d.class.getClassLoader().getResource("undoIcon.gif");
         ImageIcon icon = new ImageIcon(url);
@@ -215,53 +244,85 @@ public class Menu {
         rectangle.addActionListener(actionRectangle);
         toolBar.add(rectangle);
 
-         url = Paint2d.class.getClassLoader().getResource("targetIcon.gif");
+        url = Paint2d.class.getClassLoader().getResource("circleIcon.gif");
+        icon = new ImageIcon(url);
+        circle = new JButton(icon);
+        circle.addActionListener(shapeButtonsListener);
+        circle.addActionListener(actionCircle);
+        toolBar.add(circle);
+
+
+        url = Paint2d.class.getClassLoader().getResource("diagramElipse.gif");
+        icon = new ImageIcon(url);
+        elipse = new JButton(icon);
+        elipse.addActionListener(shapeButtonsListener);
+        elipse.addActionListener(actionElipse);
+        toolBar.add(elipse);
+
+        url = Paint2d.class.getClassLoader().getResource("targetIcon.gif");
         icon = new ImageIcon(url);
         edit = new JButton(icon);
         edit.addActionListener(shapeButtonsListener);
         edit.addActionListener(actionEdit);
         toolBar.add(edit);
-        
-        
+
+
         checkedButtonColor();
 
         frame.add(toolBar, BorderLayout.NORTH);
+        frame.add(toolBarV, BorderLayout.EAST);
     }
 
     private void checkedButtonColor() {
-<<<<<<< HEAD
-        if (Paint2d.defaultShape.equals("pencil")) {
-            pencil.setBackground(Color.LIGHT_GRAY);
-            line.setBackground(Color.WHITE);
-            rectangle.setBackground(Color.WHITE);
-        } else if (Paint2d.defaultShape.equals("rectangle")) {
-            rectangle.setBackground(Color.LIGHT_GRAY);
-            line.setBackground(Color.WHITE);
-            pencil.setBackground(Color.WHITE);
-        } else {
-            line.setBackground(Color.LIGHT_GRAY);
-            pencil.setBackground(Color.WHITE);
-            rectangle.setBackground(Color.WHITE);
-=======
         switch (Paint2d.defaultShape) {
             case "pencil":
                 pencil.setBackground(Color.LIGHT_GRAY);
                 line.setBackground(Color.WHITE);
                 rectangle.setBackground(Color.WHITE);
+                circle.setBackground(Color.WHITE);
+                edit.setBackground(Color.WHITE);
+                elipse.setBackground(Color.WHITE);
                 break;
             case "rectangle":
                 rectangle.setBackground(Color.LIGHT_GRAY);
                 line.setBackground(Color.WHITE);
                 pencil.setBackground(Color.WHITE);
+                circle.setBackground(Color.WHITE);
+                edit.setBackground(Color.WHITE);
+                elipse.setBackground(Color.WHITE);
+                break;
+            case "circle":
+                circle.setBackground(Color.LIGHT_GRAY);
+                line.setBackground(Color.WHITE);
+                pencil.setBackground(Color.WHITE);
+                rectangle.setBackground(Color.WHITE);
+                edit.setBackground(Color.WHITE);
+                elipse.setBackground(Color.WHITE);
+                break;
+            case "elipse":
+                elipse.setBackground(Color.LIGHT_GRAY);
+                line.setBackground(Color.WHITE);
+                pencil.setBackground(Color.WHITE);
+                rectangle.setBackground(Color.WHITE);
+                edit.setBackground(Color.WHITE);
+                circle.setBackground(Color.WHITE);
+                break;
+            case "edit":
+                edit.setBackground(Color.LIGHT_GRAY);
+                line.setBackground(Color.WHITE);
+                pencil.setBackground(Color.WHITE);
+                rectangle.setBackground(Color.WHITE);
+                circle.setBackground(Color.WHITE);
+                elipse.setBackground(Color.WHITE);
                 break;
             default:
                 line.setBackground(Color.LIGHT_GRAY);
                 pencil.setBackground(Color.WHITE);
                 rectangle.setBackground(Color.WHITE);
+                edit.setBackground(Color.WHITE);
+                elipse.setBackground(Color.WHITE);
+                circle.setBackground(Color.WHITE);
                 break;
->>>>>>> master
         }
     }
 }
-
-
