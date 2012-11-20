@@ -18,7 +18,7 @@ import javax.swing.filechooser.FileFilter;
 
 
 public class SaveFileDialog implements ActionListener {
-  //  private Paint2d painted;
+   // private Paint2d painted;
 
     main.Paint2d paint;
     JFrame frame;
@@ -79,7 +79,7 @@ public class SaveFileDialog implements ActionListener {
 			try {
 				extension = arg0.getCanonicalPath();
 				if (extension != null) {
-			        if (extension.endsWith(".png")) {
+			        if (extension.endsWith(".png") || extension.endsWith(".jpg")) {
 			                return true;
 			        } else {
 			            return false;
@@ -134,10 +134,6 @@ public class SaveFileDialog implements ActionListener {
 		public String getDescription() {
 			return "*.jpg";
 		}
-		
-		/*public String getExtension(){
-			return "jpg";
-		}*/
 		
 	}
 

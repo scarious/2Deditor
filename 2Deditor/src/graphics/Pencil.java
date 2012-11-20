@@ -8,6 +8,8 @@ public class Pencil implements GraphicsObject {
 	//int[] coordinates = new int[];
 	List<Integer> coordinates = new ArrayList<>();
 	int x = 0, y = 1;
+	private int copiedFrom = -1;
+	boolean isVisible = true;
 	
 	public Pencil(int x1, int y1, int x2, int y2){
 		coordinates.add(x1);
@@ -73,5 +75,25 @@ public class Pencil implements GraphicsObject {
     public void setFixReleasedCoordY(int x) {
        // throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+	public boolean visible() {
+		return isVisible;
+	}
+
+	@Override
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
+	}
+
+	@Override
+	public void setOrigin(int copiedFrom){
+		this.copiedFrom = copiedFrom;
+	}
+	
+	@Override
+	public int getOrigin(){
+		return copiedFrom;
+	}
 
 }

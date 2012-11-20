@@ -4,6 +4,8 @@ import java.awt.Image;
 
 public class Picture implements GraphicsObject{
 	Image image;
+	private int copiedFrom = -1;
+	boolean isVisible = true;
 	
 	public Picture(Image img){
 		this.image = img;
@@ -73,6 +75,26 @@ public class Picture implements GraphicsObject{
     public void setFixReleasedCoordY(int x) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+	public boolean visible() {
+		return isVisible;
+	}
+
+	@Override
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
+	}
+
+	@Override
+	public void setOrigin(int copiedFrom){
+		this.copiedFrom = copiedFrom;
+	}
+	
+	@Override
+	public int getOrigin(){
+		return copiedFrom;
+	}
 
    
 
