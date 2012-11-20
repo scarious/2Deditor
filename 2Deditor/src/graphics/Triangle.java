@@ -11,6 +11,8 @@ public class Triangle implements GraphicsObject {
     private int FixReleasedCoordX;
     private int FixStartCoordX;
     private int FixStartCoordY;
+    private int copiedFrom = -1;
+    boolean isVisible = true;
 
     public Triangle (int x1, int y1, int x2, int y2, int x3, int y3) {
         coordinates[0] = x1; //startCoordX
@@ -88,6 +90,28 @@ public class Triangle implements GraphicsObject {
     public void setFixReleasedCoordY(int x) {
         FixReleasedCoordY = x;
     }
+
+	@Override
+	public boolean visible() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setVisible(boolean isVisible) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setOrigin(int copiedFrom){
+		this.copiedFrom = copiedFrom;
+	}
+	
+	@Override
+	public int getOrigin(){
+		return copiedFrom;
+	}
 }
 
 
