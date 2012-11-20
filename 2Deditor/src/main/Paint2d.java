@@ -7,7 +7,6 @@ import graphics.Line;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 
 
@@ -48,8 +47,7 @@ public class Paint2d extends JPanel {
     private int newStartCoordX, newStartCoordY, newFinalCoordX, newFinalCoordY;
 
     private enum Directions {
-
-        HORIZONTAL,
+    	HORIZONTAL,
         VERTICAL,
         BOTH
     }
@@ -362,7 +360,7 @@ public class Paint2d extends JPanel {
             }
         }
 
-        public boolean isInElipse(int editCoordX, int editCoordY, GraphicsObject go) {
+        /*public boolean isInElipse(int editCoordX, int editCoordY, GraphicsObject go) {
             if ((((editCoordX * editCoordX) / ((go.getStartEndXY()[2] / 2) * (go.getStartEndXY()[2] / 2))
                     + (editCoordY * editCoordY) / ((go.getStartEndXY()[3] / 2) * (go.getStartEndXY()[3]) / 2))) <= 1) {
 
@@ -370,7 +368,7 @@ public class Paint2d extends JPanel {
             } else {
                 return false;
             }
-        }
+        }*/
 
         public void editObject(int CoordX, int CoordY) {
             isObject = false;
@@ -466,10 +464,8 @@ public class Paint2d extends JPanel {
 
                             drawing = false;
                             moving = true;
-
                             editObject(startCoordX, startCoordY);
-                            // drawList.remove(objectIndex);
-                            //   System.out.println(objectIndex);
+                            
                             break;
 
 

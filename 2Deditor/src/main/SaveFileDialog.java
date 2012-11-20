@@ -18,7 +18,7 @@ import javax.swing.filechooser.FileFilter;
 
 
 public class SaveFileDialog implements ActionListener {
-    private Paint2d painted;
+  //  private Paint2d painted;
 
     main.Paint2d paint;
     JFrame frame;
@@ -32,7 +32,7 @@ public class SaveFileDialog implements ActionListener {
         this.paint = paint;
         this.frame = paint.getFrame();
         fc = new JFileChooser();
-        drawingArea = paint.getDrawingArea();//JComponent na ktory sa kresli
+        drawingArea = Paint2d.getDrawingArea();//JComponent na ktory sa kresli
     }
 
     @Override
@@ -135,9 +135,9 @@ public class SaveFileDialog implements ActionListener {
 			return "*.jpg";
 		}
 		
-		public String getExtension(){
+		/*public String getExtension(){
 			return "jpg";
-		}
+		}*/
 		
 	}
 
