@@ -79,7 +79,7 @@ public class SaveFileDialog implements ActionListener {
 			try {
 				extension = arg0.getCanonicalPath();
 				if (extension != null) {
-			        if (extension.endsWith(".png") || extension.endsWith(".jpg")) {
+			        if (extension.endsWith(".png")) {
 			                return true;
 			        } else {
 			            return false;
