@@ -40,7 +40,7 @@ public class Paint2d extends JPanel {
     static JLabel statusLabel;
     static JPanel panel;
     static JComponent drawingArea;
-    private boolean resizeDrawingArea = false, drawing = false;
+    private boolean resizeDrawingArea = true, drawing = false;
     static MouseAdapter mouseEventsHandler;
     private boolean moving = false;
     private boolean isObject = false;
@@ -65,11 +65,23 @@ public class Paint2d extends JPanel {
         // g2.getPaint().
         setBackground(Color.white);
         g2.setPaint(Color.black);
+//        for (int i=2; i<=drawingArea.getHeight(); i+=5){
+//            g2.drawLine(0,i, drawingArea.getWidth(), i);
+//        }
+//        for (int i=2; i<=drawingArea.getWidth(); i+=5){
+//            g2.drawLine(i,0, i, drawingArea.getHeight());
+//        }
+//        
         for (GraphicsObject go : drawList) {
             if (go instanceof Line) {
                 g2.setColor(Color.BLACK);
                 int[] a = go.getStartEndXY();
+               g2.translate(10, -2);
+               g2.scale(10, 10);
+                g2.rotate(Math.toRadians(20), 100 / 2, 100 / 2);
+             g2.translate(10, 10);
                 g2.drawLine(a[0], a[1], a[2], a[3]);
+                
 
             }
             if (go instanceof graphics.Rectangle) {
@@ -78,16 +90,16 @@ public class Paint2d extends JPanel {
 
                 int[] a = go.getStartEndXY();
                 g2.setColor(mainColor);
-                
-                 g2.fillRoundRect(a[0] + 5, a[1] + 5, a[2], a[3], 10, 10);
+
+                g2.fillRoundRect(a[0] + 5, a[1] + 5, a[2], a[3], 8, 8);
                 //g2.setColor(Color.BLACK);      
                 //g2.setPaintMode();
                 //g2.drawRect(a[0], a[1], a[2], a[3]);
                 g2.setColor(shadowColor);
                 g2.fillRect(a[0], a[1], a[2], a[3]);
-               
-                
-               // g2.fillRect(a[0] - 5, a[1] - 5, a[2], a[3]);
+
+
+                // g2.fillRect(a[0] - 5, a[1] - 5, a[2], a[3]);
 
 
             }
@@ -122,14 +134,18 @@ public class Paint2d extends JPanel {
             if (go instanceof graphics.ElipseDiagram) {
                 g2.setColor(Color.BLACK);
                 int[] a = go.getStartEndXY();
+                g2.fillOval(a[0] + 2, a[1] + 2, a[2] + 2, a[3] + 2);
                 g2.drawOval(a[0], a[1], a[2], a[3]);
                 g2.setColor(Color.WHITE);
-                g2.fillOval(a[0]+1, a[1]+1, a[2]-2, a[3]-2);
+                g2.fillOval(a[0] + 1, a[1] + 1, a[2] - 2, a[3] - 2);
+
+
             }
             if (go instanceof Picture) {
                 g2.drawImage(((Picture) go).getImage(), 0, 0, null);//.getScaledInstance(frame.getContentPane().getWidth(), frame.getContentPane().getHeight(), Image.SCALE_SMOOTH), 0, 0, null);
             }
         }
+       
     }
 
     private static void createAndShowGUI() {
@@ -272,7 +288,7 @@ public class Paint2d extends JPanel {
                 drawList.get(arrayIndex).setFinalCoordinates(releasedCoordX, releasedCoordY);
 
 
-            } else if (resizeDrawingArea) {
+            }  else if (resizeDrawingArea) {
                 switch (resizeDirection) {
                     case HORIZONTAL:
                         drawingArea.setSize(releasedCoordX, drawingArea.getHeight());
@@ -286,7 +302,7 @@ public class Paint2d extends JPanel {
                 }
             }
 
-
+else
             if (moving && isObject) {
                 /*
                  * pre zjednodusenie ulozim si do "lokalnych" premennych nove suradnice po pohnuti s objektom
@@ -339,27 +355,26 @@ public class Paint2d extends JPanel {
          * vypocita ci bod na ktory som klikol patri objektu go, teda priamke
          */
         public boolean isPointOfLine(GraphicsObject go, int EditX, int EditY) {
+
             /*
              * telo if-u mi vypliva z urcenia rovnice priamky. pocita to dobre akurat ked zacnem
              * kreslit od vacsich suradnic tak nieco nehraje, mozno kapacita intu to si este odsledujem
              */
 
-
-            if (((-(((go.getFixReleasedCoordY() - go.getFixStartCoordY()) * go.getFixStartCoordX())
+            if ((((-(((go.getFixReleasedCoordY() - go.getFixStartCoordY()) * go.getFixStartCoordX())
                     - (go.getFixReleasedCoordX() - go.getFixStartCoordX()) * go.getFixStartCoordY())
                     + (((go.getFixReleasedCoordY() - go.getFixStartCoordY()) * EditX)
-                    - ((go.getFixReleasedCoordX() - go.getFixStartCoordX()) * EditY))) <= 400
+                    - ((go.getFixReleasedCoordX() - go.getFixStartCoordX()) * EditY))) <= 400)
                     && ((-(((go.getFixReleasedCoordY() - go.getFixStartCoordY()) * go.getFixStartCoordX())
                     - (go.getFixReleasedCoordX() - go.getFixStartCoordX()) * go.getFixStartCoordY())
                     + (((go.getFixReleasedCoordY() - go.getFixStartCoordY()) * EditX)
                     - ((go.getFixReleasedCoordX() - go.getFixStartCoordX()) * EditY))) >= -400))) {
 
-                System.out.println("je to priamka");
                 return true;
             } else {
-
                 return false;
             }
+
         }
 
         public boolean isInElipse(int editCoordX, int editCoordY, GraphicsObject go) {
@@ -426,7 +441,7 @@ public class Paint2d extends JPanel {
                 startCoordX = editCoordX = e.getX();
                 startCoordY = editCoordY = e.getY();
 
-                if (!mouseInAreaCheck(clickedCoordX, clickedCoordY)) {
+                if (!mouseInAreaCheck(startCoordX, startCoordY)) {
                     drawing = true;
 
                     System.out.println(defaultShape);
@@ -480,7 +495,7 @@ public class Paint2d extends JPanel {
                             break;
                     }
                 } else {
-
+                    drawing=false;
                     resizeDrawingArea = true;
                 }
             }
