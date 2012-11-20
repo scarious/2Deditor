@@ -56,6 +56,7 @@ public class OpenFileDialog implements ActionListener {
 					Image image = ImageIO.read(file);
 					paint.addToDrawList(new graphics.Picture(image, Integer.parseInt(textWidth.getText()), Integer.parseInt(textHeight.getText())));
 				} catch (IOException e1) {
+					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
                 

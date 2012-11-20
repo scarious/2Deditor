@@ -36,11 +36,6 @@ public interface GraphicsObject {
 
     public void setFixReleasedCoordY(int x);
 
-
-    public boolean visible();
-    public void setVisible(boolean isVisible);
-    
-    public void setOrigin(int copiedFrom);
-    public int getOrigin();
+   // public void changeCoord(int x1, int x2, int y1, int y2);
    
 }

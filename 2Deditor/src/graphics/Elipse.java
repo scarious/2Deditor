@@ -18,8 +18,6 @@ public class Elipse implements GraphicsObject {
     private int FixReleasedCoordX;
     private int FixStartCoordX;
     private int FixStartCoordY;
-    boolean isVisible = true;
-    private int copiedFrom = -1;
 
     public Elipse(int x1, int y1, int x2, int y2) {
         originalX = x1; //startCoordX
@@ -130,24 +128,4 @@ public class Elipse implements GraphicsObject {
     public void setFixStartCoordY(int FixStartCoordy) {
         FixStartCoordY = FixStartCoordy;
     }
-
-    @Override
-	public boolean visible() {
-		return isVisible;
-	}
-
-    @Override
-	public void setVisible(boolean isVisible) {
-		this.isVisible = isVisible;
-	}
-
-    @Override
-	public void setOrigin(int copiedFrom){
-		this.copiedFrom = copiedFrom;
-	}
-	
-	@Override
-	public int getOrigin(){
-		return copiedFrom;
-	}
 }

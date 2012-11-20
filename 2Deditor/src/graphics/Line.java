@@ -11,20 +11,13 @@ public class Line implements GraphicsObject {
     private int FixReleasedCoordX;
     private int FixStartCoordX;
     private int FixStartCoordY;
-    boolean isVisible = true;
-    private int copiedFrom = -1;
 
     public Line(int x1, int y1, int x2, int y2) {
         coordinates[0] = x1; //startCoordX
         coordinates[1] = y1; //startCoordY
         startX = x1;
         startY = y1;
-        currentX = x2;// - startX;
-        currentY = y2;
-        FixStartCoordX = x1;
-        FixStartCoordY = y1;
-        FixReleasedCoordX = x1;
-        FixReleasedCoordY = y1;
+
     }
 
     @Override
@@ -95,26 +88,4 @@ public class Line implements GraphicsObject {
     public void setFixReleasedCoordY(int x) {
         FixReleasedCoordY = x;
     }
-
-    @Override
-	public boolean visible() {
-		return isVisible;
-	}
-
-
-
-	@Override
-	public void setVisible(boolean isVisible) {
-		this.isVisible = isVisible;
-	}
-
-	@Override
-	public void setOrigin(int copiedFrom){
-		this.copiedFrom = copiedFrom;
-	}
-	
-	@Override
-	public int getOrigin(){
-		return copiedFrom;
-	}
 }

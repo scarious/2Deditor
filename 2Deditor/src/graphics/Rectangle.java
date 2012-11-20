@@ -9,20 +9,14 @@ public class Rectangle implements GraphicsObject {
     private int FixReleasedCoordX;
     private int FixStartCoordX;
     private int FixStartCoordY;
-    boolean isVisible = true;
-    int copiedFrom = -1;
 
     public Rectangle(int x1, int y1, int x2, int y2) {
         originalX = x1; //startCoordX
         originalY = y1; //startCoordY
         startX = x1;
         startY = y1;
-        width = x2;
-        height = y2;
-        FixStartCoordX = startX;
-        FixStartCoordY = startY;
-        FixReleasedCoordX = startX + width;
-        FixReleasedCoordY = startY + height;
+        width = 0;
+        height = 0;
     }
 
     
@@ -139,24 +133,4 @@ public class Rectangle implements GraphicsObject {
     public void setFixStartCoordY(int FixStartCoordy) {
         FixStartCoordY = FixStartCoordy;
     }
-
-    @Override
-	public boolean visible() {
-		return isVisible;
-	}
-
-	@Override
-	public void setVisible(boolean isVisible) {
-		this.isVisible = isVisible;
-	}
-	
-	@Override
-	public void setOrigin(int copiedFrom){
-		this.copiedFrom = copiedFrom;
-	}
-	
-	@Override
-	public int getOrigin(){
-		return copiedFrom;
-	}
 }
