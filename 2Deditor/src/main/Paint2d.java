@@ -204,7 +204,6 @@ public class Paint2d extends JPanel {
     public void undoAction() {
          if(arrayIndex > 0){ //ak je aspon nieco nakreslene
         	 redoDrawList.add(drawList.get(arrayIndex - 1)); //prida do zalozneho zoznamu posledny objekt v zozname
-        	 System.out.println(drawList.get(arrayIndex - 1).getOrigin());
         	 if(drawList.get(arrayIndex - 1).getOrigin() != -1){ //ak je posledny prvok len presunuty original
             	drawList.get(drawList.get(arrayIndex - 1).getOrigin()).setVisible(true); //nastavi sa povodny objekt na viditelny
             	drawList.remove(arrayIndex - 1); //kopia sa odstrani 
@@ -222,7 +221,6 @@ public class Paint2d extends JPanel {
 
     public void redoAction() {
         if (redoArrayIndex > 0) {
-        	System.out.println("Aktualny objekt je povodne z: " + (redoDrawList.get(redoArrayIndex - 1)).getOrigin());
         	if(redoDrawList.get(redoArrayIndex - 1).getOrigin()  != -1){
         		drawList.get(redoDrawList.get(redoArrayIndex - 1).getOrigin()).setVisible(false);
         		drawList.add(redoDrawList.get(redoArrayIndex - 1));	
