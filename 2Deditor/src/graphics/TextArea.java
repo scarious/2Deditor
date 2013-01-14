@@ -1,16 +1,14 @@
 package graphics;
 
+import java.awt.Color;
 import java.io.Serializable;
-
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class TextArea implements GraphicsObject, Serializable {
+public class TextArea implements GraphicsObject,Serializable {
+    private static final long serialVersionUID = 430648209592845408L;
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 3826810746829941166L;
-	int[] coordinates = new int[4]; //0,1 - X, Y          2,3 - width, height
+    int[] coordinates = new int[4]; //0,1 - X, Y          2,3 - width, height
     int originalX, originalY, startX, startY, currentX, currentY;
     int swapX, swapY, width, height;
     private int FixReleasedCoordY;
@@ -20,6 +18,9 @@ public class TextArea implements GraphicsObject, Serializable {
     boolean isVisible = true, isActive=false;
     int copiedFrom = -1;
     JTextArea textArea;
+    JScrollPane scroll;
+    private Color ColorDefault=Color.black;
+    private Color borderColor;
 
     public TextArea(int x1, int y1, int x2, int y2) {
         originalX = x1; //startCoordX
@@ -33,7 +34,11 @@ public class TextArea implements GraphicsObject, Serializable {
         FixReleasedCoordX = startX + width;
         FixReleasedCoordY = startY + height;
         textArea= new JTextArea();
- 
+        scroll = new JScrollPane(textArea);
+        ColorDefault=Color.black;
+    }
+    public JScrollPane getScroll(){
+        return scroll;
     }
     
     public JTextArea getTextArea(){
@@ -170,5 +175,35 @@ public class TextArea implements GraphicsObject, Serializable {
     @Override
     public boolean isActive() {
       return isActive;
+    }
+
+    @Override
+    public void setColor(Color color) {
+        ColorDefault= color;
+    }
+
+    @Override
+    public Color getColor() {
+       return ColorDefault;
+    }
+    
+    @Override
+    public boolean isShade() {
+        return false;
+    }
+
+    @Override
+    public void setShade(boolean shade) {
+       
+    }
+
+    @Override
+    public void setBorderColor(Color color) {
+        borderColor=color;
+    }
+
+    @Override
+    public Color getBorderColor() {
+       return borderColor;
     }
 }

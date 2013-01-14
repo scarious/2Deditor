@@ -4,6 +4,8 @@
  */
 package graphics;
 
+import java.awt.Color;
+import java.awt.color.ColorSpace;
 import java.io.Serializable;
 
 /**
@@ -24,6 +26,9 @@ public class ElipseDiagram implements GraphicsObject, Serializable {
     boolean isVisible = true;
     private int copiedFrom = -1;
     private boolean isActive;
+    private Color ColorDefault= Color.WHITE;
+    private boolean shadE;
+    private Color borderColor= Color.BLACK;
 
     public ElipseDiagram(int x1, int y1, int x2, int y2) {
       originalX = x1; //startCoordX
@@ -169,5 +174,36 @@ public class ElipseDiagram implements GraphicsObject, Serializable {
     @Override
     public boolean isActive() {
         return isActive;
+    }
+    
+     @Override
+    public void setColor(Color color) {
+        ColorDefault= color;
+    }
+
+    @Override
+    public Color getColor() {
+       return ColorDefault;
+    }
+    
+    @Override
+    public boolean isShade() {
+        return shadE;
+    }
+
+    @Override
+    public void setShade(boolean shade) {
+        shadE = shade;
+    }
+    
+    
+    @Override
+    public void setBorderColor(Color color) {
+        borderColor=color;
+    }
+
+    @Override
+    public Color getBorderColor() {
+       return borderColor;
     }
 }

@@ -1,5 +1,6 @@
 package graphics;
 
+import java.awt.Color;
 import java.io.Serializable;
 
 public class Triangle implements GraphicsObject, Serializable {
@@ -126,6 +127,42 @@ public class Triangle implements GraphicsObject, Serializable {
 	public boolean isActive() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public boolean isShade() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setShade(boolean shade) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setColor(Color color) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Color getColor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setBorderColor(Color color) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Color getBorderColor() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
 

@@ -2,13 +2,14 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -19,7 +20,7 @@ public class Menu {
 
     JFrame frame;
     private Paint2d paint;
-    JButton pencil, line, rectangle, edit, circle, elipse, diamond, red, yel, textArea;
+    JButton pencil, line, rectangle, edit, circle, elipse, diamond, textArea, actual;
     JCheckBox grid;
 
     public Menu(Paint2d paint) {
@@ -185,8 +186,8 @@ public class Menu {
         menu.add(menuItem);
 
 
-        
-         menuItem = new JMenuItem("TextArea");
+
+        menuItem = new JMenuItem("TextArea");
 
         ActionListener actionTextArea = new ActionListener() {
             @Override
@@ -199,8 +200,8 @@ public class Menu {
         menuItem.addActionListener(actionTextArea);
         menu.add(menuItem);
 
-        
-        
+
+
 
         menuItem = new JMenuItem("Edit");
 
@@ -231,14 +232,14 @@ public class Menu {
 //        toolBarV.setAlignmentX(JToolBar.VERTICAL);
 
 
-        URL url = Paint2d.class.getClassLoader().getResource("undoIcon.gif");
+        URL url = Paint2d.class.getClassLoader().getResource("resources/undoIcon.gif");
         ImageIcon icon = new ImageIcon(url);
         JButton undo = new JButton(icon);
         undo.addActionListener(actionUndo);
         undo.setToolTipText("Undo last step");
         toolBar.add(undo);
 
-        url = Paint2d.class.getClassLoader().getResource("redoIcon.gif");
+        url = Paint2d.class.getClassLoader().getResource("resources/redoIcon.gif");
         icon = new ImageIcon(url);
         JButton redo = new JButton(icon);
         redo.addActionListener(actionRedo);
@@ -258,14 +259,14 @@ public class Menu {
 
 
 
-        url = Paint2d.class.getClassLoader().getResource("pencilIcon.gif");
+        url = Paint2d.class.getClassLoader().getResource("resources/pencilIcon.gif");
         icon = new ImageIcon(url);
         pencil = new JButton(icon);
         pencil.addActionListener(shapeButtonsListener);
         pencil.addActionListener(actionPencil);
         toolBar.add(pencil);
 
-        url = Paint2d.class.getClassLoader().getResource("lineIcon.gif");
+        url = Paint2d.class.getClassLoader().getResource("resources/lineIcon.gif");
         icon = new ImageIcon(url);
         line = new JButton(icon);
         line.addActionListener(shapeButtonsListener);
@@ -273,14 +274,14 @@ public class Menu {
         toolBar.add(line);
 
 
-        url = Paint2d.class.getClassLoader().getResource("rectangleIcon.gif");
+        url = Paint2d.class.getClassLoader().getResource("resources/rectangleIcon.gif");
         icon = new ImageIcon(url);
         rectangle = new JButton(icon);
         rectangle.addActionListener(shapeButtonsListener);
         rectangle.addActionListener(actionRectangle);
         toolBar.add(rectangle);
 
-        url = Paint2d.class.getClassLoader().getResource("circleIcon.gif");
+        url = Paint2d.class.getClassLoader().getResource("resources/circleIcon.gif");
         icon = new ImageIcon(url);
         circle = new JButton(icon);
         circle.addActionListener(shapeButtonsListener);
@@ -288,14 +289,14 @@ public class Menu {
         toolBar.add(circle);
 
 
-        url = Paint2d.class.getClassLoader().getResource("diagramElipse.gif");
+        url = Paint2d.class.getClassLoader().getResource("resources/diagramElipse.gif");
         icon = new ImageIcon(url);
         elipse = new JButton(icon);
         elipse.addActionListener(shapeButtonsListener);
         elipse.addActionListener(actionElipse);
         toolBar.add(elipse);
 
-        url = Paint2d.class.getClassLoader().getResource("Diamond.gif");
+        url = Paint2d.class.getClassLoader().getResource("resources/Diamond.gif");
         icon = new ImageIcon(url);
         diamond = new JButton(icon);
         diamond.addActionListener(shapeButtonsListener);
@@ -303,58 +304,43 @@ public class Menu {
         toolBar.add(diamond);
 
 
-        url = Paint2d.class.getClassLoader().getResource("targetIcon.gif");
+        url = Paint2d.class.getClassLoader().getResource("resources/targetIcon.gif");
         icon = new ImageIcon(url);
         edit = new JButton(icon);
         edit.addActionListener(shapeButtonsListener);
         edit.addActionListener(actionEdit);
         toolBar.add(edit);
-   
-        url = Paint2d.class.getClassLoader().getResource("textareaIcon.gif");
+
+        url = Paint2d.class.getClassLoader().getResource("resources/textareaIcon.gif");
         icon = new ImageIcon(url);
         textArea = new JButton(icon);
         textArea.addActionListener(shapeButtonsListener);
         textArea.addActionListener(actionTextArea);
         toolBar.add(textArea);
-        
-        edit.setToolTipText("Moving object");
-        diamond.setToolTipText("Drawing If-Else Block");
-        elipse.setToolTipText("Drawing Elipse");
-        rectangle.setToolTipText("Drawing rectangle");
-        circle.setToolTipText("Drawing Circle");
-        textArea.setToolTipText("TextArea");
-        
-        url = Paint2d.class.getClassLoader().getResource("2.gif");
-        icon = new ImageIcon(url);
-        red = new JButton(icon);
-        red.setSize(new Dimension(30, 35));
-        red.setBorder(null);
-        red.addActionListener(new ActionListener() {
+
+        actual = new JButton();
+        actual.setSize(30, 30);
+        actual.setBorder(BorderFactory.createLineBorder(Color.WHITE, 15, false));
+        //  actual.setBorder(null);
+
+        actual.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                paint.setColor(Color.RED);
+                Color background = JColorChooser.showDialog(null,
+                        "JColorChooser Sample", Color.WHITE);
+                actual.setBackground(background);
+                actual.setBorder(BorderFactory.createLineBorder(background, 15, false));
+                paint.setColor(background);
+                //  System.out.println(background.getBlue()+ "\n" + background.getGreen() + "\n" + background.getRed());
+                if ((background.getBlue() - 1 > 230 && background.getGreen() - 1 > 230 && background.getRed() - 1 > 230)) {
+                    paint.setBrightColor(true);
+                } else {
+                    paint.setBrightColor(false);
+
+                }
             }
         });
-        toolBar.add(red);
-
-        url = Paint2d.class.getClassLoader().getResource("1.gif");
-        icon = new ImageIcon(url);
-        yel = new JButton(icon);
-        yel.setSize(new Dimension(30, 35));
-        yel.setBorder(null);
-        yel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                paint.setColor(Color.YELLOW);
-            }
-        });
-        toolBar.add(yel);
-
-//        for (int i=0; i<=100; i=+10){
-//            toolBar.add(new )
-//        }
-
-
+        toolBar.add(actual);
 
         grid = new JCheckBox("Grid", false);
         toolBar.add(grid);
@@ -371,12 +357,20 @@ public class Menu {
                 paint.repaint();
             }
         });
-       
 
 
+        line.setToolTipText("Draving line");
+        edit.setToolTipText("Moving object");
+        diamond.setToolTipText("Drawing If-Else Block");
+        elipse.setToolTipText("Drawing Elipse");
+        rectangle.setToolTipText("Drawing rectangle");
+        circle.setToolTipText("Drawing Circle");
+        textArea.setToolTipText("TextArea");
+        actual.setToolTipText("Choose color");
         checkedButtonColor();
 
         frame.add(toolBar, BorderLayout.NORTH);
+        frame.pack();
     }
 
     private void checkedButtonColor() {
@@ -390,7 +384,7 @@ public class Menu {
                 elipse.setBackground(Color.WHITE);
                 diamond.setBackground(Color.WHITE);
                 textArea.setBackground(Color.WHITE);
-                        
+
                 break;
             case "rectangle":
                 rectangle.setBackground(Color.LIGHT_GRAY);
@@ -442,7 +436,7 @@ public class Menu {
                 elipse.setBackground(Color.WHITE);
                 textArea.setBackground(Color.WHITE);
             case "TextArea":
-               diamond.setBackground(Color.WHITE);
+                diamond.setBackground(Color.WHITE);
                 edit.setBackground(Color.WHITE);
                 line.setBackground(Color.WHITE);
                 pencil.setBackground(Color.WHITE);

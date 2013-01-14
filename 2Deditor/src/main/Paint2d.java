@@ -7,7 +7,6 @@ import graphics.Picture;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -40,14 +39,14 @@ public class Paint2d extends JPanel {
     static KeyListener listener;
     private boolean moving = false;
     private boolean isObject = false;
-    private boolean resizeDrawingArea = true, drawing = false, gridVisible = false;
+    private boolean resizeDrawingArea = true, drawing = false, gridVisible = false, brightColor = true;
     private int objectIndex = -1;
     private int arrayIndex = 0, redoArrayIndex = 0;
     private int newStartCoordX, newStartCoordY, newFinalCoordX, newFinalCoordY;
     private int startCoordX, startCoordY, releasedCoordX, releasedCoordY, editCoordX, editCoordY;
     Menu menu;
     GraphicsObject gObject;
-    private Color shapecolor = Color.BLACK;
+    private Color shapecolor = Color.WHITE;
     graphics.TextArea text;
 
     private enum Directions {
@@ -60,27 +59,15 @@ public class Paint2d extends JPanel {
     public Paint2d() {
 
         mouseEventsHandler = new Mouse();
-//        listener = new KeyListener() {
-//            
-//            @Override
-//            public void keyTyped(KeyEvent ke) {
-//                //    System.out.println("here");
-//            }
-//
-//            @Override
-//            public void keyPressed(KeyEvent ke) {
-//                //  System.out.println("here");
-//            }
-//
-//            @Override
-//            public void keyReleased(KeyEvent ke) {
-//                if (ke.getKeyCode() == KeyEvent.VK_DELETE) {
-//                    clearDrawlist();
-//
-//                }
-//            }
-//        };
 
+    }
+
+    public void setBrightColor(boolean color) {
+        brightColor = color;
+    }
+
+    public boolean isBrightRGBColor() {
+        return brightColor;
     }
 
     public void setColor(Color color) {
@@ -105,59 +92,60 @@ public class Paint2d extends JPanel {
 
         g2 = (Graphics2D) g;
         setBackground(Color.white);
-        g2.setPaint(Color.LIGHT_GRAY);
-        //  textArea.repaint();
+
         if (isGridVisible()) {
+            g2.setColor(Color.LIGHT_GRAY);
             showGrid();
         }
         for (GraphicsObject go : drawList) {
             if (go.visible()) {
                 if (go instanceof Line) {
-                    g2.setColor(Color.BLACK);
+
+                    g2.setColor(go.getColor());
+                    if (isBrightRGBColor()) {
+                        g2.setColor(Color.BLACK);
+                    }
                     int[] a = go.getStartEndXY();
                     g2.drawLine(a[0], a[1], a[2], a[3]);
-                    //  g2.drawLine(a[0]+1, a[1]-1, a[2]+1, a[3]-1);
 
                 }
                 if (go instanceof graphics.TextArea) {
+
                     int[] a = go.getStartEndXY();
                     g2.setColor(Color.BLACK);
                     text = (graphics.TextArea) go;
-                    panel.add(text.getTextArea());
-                  //  g2.drawRect(a[0], a[1], a[2], a[3]);
-                    
-                    text.getTextArea().setBounds(a[0] + 5, a[1] + 5, a[2] - 10, a[3] - 10);
-                    text.getTextArea().setLineWrap(true);
-                               text.getTextArea().setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                    
+                    panel.add(text.getScroll());
+                    text.getScroll().setBounds(a[0] + 5, a[1] + 5, a[2] - 10, a[3] - 10);
+
+                    text.getScroll().setAutoscrolls(true);
+                    text.getTextArea().setForeground(go.getColor());
                     text.getTextArea().repaint();
+                    text.getScroll().repaint();
+
                 }
                 if (go instanceof graphics.Rectangle) {
 
                     int[] a = go.getStartEndXY();
-
-                    System.out.println(go.isActive());
-
-                    if (go.isActive()) {
+                    if (go.isShade()) {
                         g2.setColor(mainColor);
                         g2.fillRoundRect(a[0] + 5, a[1] + 5, a[2], a[3], 10, 10);
                     }
-                    g2.setColor(Color.WHITE);
 
-                    g2.fillRect(a[0], a[1], a[2], a[3]);
-                 
-                    panel.setComponentZOrder(this, 0);
-                    g2.setColor(getColor());
+                    g2.setColor(go.getBorderColor());
                     g2.drawRect(a[0], a[1], a[2], a[3]);
-                    
-                    
-//                   
+                    g2.setColor(go.getColor());
+                    g2.fillRect(a[0] + 1, a[1] + 1, a[2] - 1, a[3] - 1);
 
-                    
+
+                    if (go.isActive()) {
+                        g2.setColor(Color.GREEN);
+                        g2.drawRoundRect(a[0] - 10, a[1] - 10, a[2] + 20, a[3] + 20, 10, 10);
+                    }
 
                 }
+
                 if (go instanceof Pencil) {
-                    g2.setColor(Color.BLACK);
+                    g2.setColor(go.getColor());
 
                     java.util.List<Integer> list = ((Pencil) go).getValues();
                     int a[] = new int[list.size()];
@@ -180,17 +168,34 @@ public class Paint2d extends JPanel {
                     }
                 }
                 if (go instanceof graphics.Elipse) {
-                    g2.setColor(Color.BLACK);
+
+
                     int[] a = go.getStartEndXY();
+                    g2.setColor(go.getColor());
+
                     g2.drawOval(a[0], a[1], a[2], a[3]);
+
+                    if (go.isActive()) {
+                        g2.setColor(Color.GREEN);
+                        g2.drawOval(a[0] - 10, a[1] - 10, a[2] + 20, a[3] + 20);
+                    }
                 }
                 if (go instanceof graphics.ElipseDiagram) {
-                    g2.setColor(Color.BLACK);
-                    int[] a = go.getStartEndXY();
-                    g2.drawOval(a[0], a[1], a[2], a[3]);
-                    g2.setColor(Color.WHITE);
-                    g2.fillOval(a[0] + 1, a[1] + 1, a[2] - 2, a[3] - 2);
 
+                    int[] a = go.getStartEndXY();
+                    if (go.isShade()) {
+                        g2.setColor(mainColor);
+                        g2.fillOval(a[0] + 5, a[1] + 3, a[2], a[3]);
+                    }
+                    g2.setColor(go.getColor());
+                    g2.fillOval(a[0] + 1, a[1] + 1, a[2] - 2, a[3] - 2);
+                    g2.setColor(go.getBorderColor());
+                    g2.drawOval(a[0], a[1], a[2], a[3]);
+
+                    if (go.isActive()) {
+                        g2.setColor(Color.GREEN);
+                        g2.drawOval(a[0] - 10, a[1] - 10, a[2] + 20, a[3] + 20);
+                    }
                 }
                 if (go instanceof graphics.Diamond) {
                     g2.setColor(Color.BLACK);
@@ -198,28 +203,46 @@ public class Paint2d extends JPanel {
                     int xx = (a[0] + a[2]) / 2;
                     int yy = (a[1] + a[3]) / 2;
 
-
-
                     Polygon p = new Polygon();
+                    Polygon q=new Polygon();
                     double radius, radiusY;
                     radius = Math.abs((go.getStartEndXY()[0] - go.getStartEndXY()[2]) / 2);
                     radiusY = Math.abs((go.getStartEndXY()[1] - go.getStartEndXY()[3]) / 2);
                     int centerX = xx;
                     int centerY = yy;
 
+                    if(go.isShade()){
+                      for (int t = 0; t < 4; t++) {
+                        q.addPoint((int) (centerX+5 + radius * Math.cos(t * 2 * Math.PI / 4)),
+                               (int) (centerY+5 + radiusY * Math.sin(t * 2 * Math.PI / 4)));
+                    }   
+                    
+                    g2.setColor(mainColor);
+                    g2.fillPolygon(q);
+                    }
+                    
                     for (int t = 0; t < 4; t++) {
                         p.addPoint((int) (centerX + radius * Math.cos(t * 2 * Math.PI / 4)),
                                 (int) (centerY + radiusY * Math.sin(t * 2 * Math.PI / 4)));
                     }
-
-                    g2.setColor(Color.WHITE);
+                    g2.setColor(go.getColor());
                     g2.fillPolygon(p);
-                    g2.setColor(Color.BLACK);
+                    
+
+                    g2.setColor(go.getBorderColor());
+
                     g2.drawLine(a[0], yy, xx, a[1]);
                     g2.drawLine(xx, a[1], a[2], yy);
                     g2.drawLine(a[2], yy, xx, a[3]);
                     g2.drawLine(xx, a[3], a[0], yy);
 
+                    if (go.isActive()) {
+                        g2.setColor(Color.GREEN);
+                        g2.drawLine(a[0] - 13, yy, xx, a[1] - 13);
+                        g2.drawLine(xx, a[1] - 13, a[2] + 13, yy);
+                        g2.drawLine(a[2] + 13, yy, xx, a[3] + 13);
+                        g2.drawLine(xx, a[3] + 13, a[0] - 13, yy);
+                    }
 
                 }
                 if (go instanceof Picture) {
@@ -312,7 +335,6 @@ public class Paint2d extends JPanel {
         arrayIndex++;
         repaint();
     }
-    
 
     public void undoAction() {
         if (arrayIndex > 0) { //ak je aspon nieco nakreslene
@@ -339,8 +361,6 @@ public class Paint2d extends JPanel {
             } else {
                 drawList.add(redoDrawList.get(redoArrayIndex - 1));
             }
-
-            //System.out.println("Odoberam: " + (redoArrayIndex - 1) + "Pridavam do main: " + arrayIndex);
             arrayIndex++;
 
             redoDrawList.remove(redoArrayIndex - 1);
@@ -379,16 +399,16 @@ public class Paint2d extends JPanel {
     static JComponent getDrawingArea() {
         return drawingArea;
     }
-    
-    public OwnFormat getOwnFormat(){
-    	return new OwnFormat(drawList, arrayIndex);
+
+    public OwnFormat getOwnFormat() {
+        return new OwnFormat(drawList, arrayIndex);
     }
-    
-    public void openOwnFormat(OwnFormat own){
-    	clearDrawlist();
-    	this.drawList = own.getDrawList();
-    	this.arrayIndex = own.getArrayIndex();
-    	repaint();
+
+    public void openOwnFormat(OwnFormat own) {
+        clearDrawlist();
+        this.drawList = own.getDrawList();
+        this.arrayIndex = own.getArrayIndex();
+        repaint();
     }
 
     private class Mouse extends MouseAdapter {
@@ -445,34 +465,30 @@ public class Paint2d extends JPanel {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            if (e.getClickCount() == 2) {
-                System.out.println("here");
-                textArea = new JTextArea();
-                panel.add(textArea);
-                textArea.setText("textarea");
-                textArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                textArea.setBounds(10, 10, 50, 50);
-                //textArea.set
-                //textArea.setBounds(gObject.getFixStartCoordX() + 2, gObject.getFixStartCoordY() + 2, gObject.getFixReleasedCoordY(), gObject.getFixReleasedCoordY());              
 
-            }
-            editObject(startCoordX, startCoordY);
-            if (isObject) {
-
-                if (gObject.isActive()) {
-
-                    gObject.setActive(false);
-
-                } else {
-
-                    gObject.setActive(true);
-
+            if (e.getButton() == MouseEvent.BUTTON3) {
+                editObject(e.getX(), e.getY());
+                if (isObject) {
+                    if (gObject.isShade()) {
+                        gObject.setShade(false);
+                    } else {
+                        gObject.setShade(true);
+                    }
                 }
+            } else {
 
+                editObject(startCoordX, startCoordY);
+                if (isObject) {
+
+                    if (!gObject.isActive()) {
+
+                        gObject.setActive(true);
+
+                    }
+                }
             }
-            repaint();
 
-            //  }
+            repaint();
 
         }
 
@@ -487,14 +503,6 @@ public class Paint2d extends JPanel {
         }
 
         public boolean isPointOfDiamond(GraphicsObject go, int EditX, int EditY) {
-//            
-//                    int xx = (a[0] + a[2]) / 2;
-//                    int yy = (a[1] + a[3]) / 2;
-//
-//                    g2.drawLine(a[0], yy, xx, a[1]);
-//                    g2.drawLine(xx, a[1], a[2], yy);
-//                    g2.drawLine(a[2], yy, xx, a[3]);
-//                    g2.drawLine(xx, a[3], a[0], yy);
 
 
             double xx = Math.round((go.getFixStartCoordX() + go.getFixReleasedCoordX()) / 2);
@@ -553,19 +561,6 @@ public class Paint2d extends JPanel {
 
         }
 
-        public boolean isInElipse(int editCoordX, int editCoordY, GraphicsObject go) {
-            int stredX = Math.abs((go.getFixStartCoordX() - go.getFixReleasedCoordX()) / 2);
-
-            int stredY = Math.abs((go.getFixStartCoordY() - go.getFixReleasedCoordY()) / 2);
-            int in = (int) (Math.pow((editCoordX - stredX), 2) + Math.pow((editCoordY - stredY), 2));
-            int radius = (int) Math.pow((go.getFixStartCoordX() - stredY), 2);
-            if (in <= radius) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
         public void editObject(int CoordX, int CoordY) {
             isObject = false;
             objectIndex = drawList.size() - 1;
@@ -612,17 +607,26 @@ public class Paint2d extends JPanel {
                         break;
                     }
                 }
-                //go.setActive(false);
+                go.setActive(false);
                 //  System.out.println("ta kdeeee");
                 objectIndex--;
             }
 
+            for (int i = objectIndex - 1; i >= 0; i--) {
+                //for (GraphicsObject go : drawList) {
+                GraphicsObject go = drawList.get(i);
+                go.setActive(false);
+
+            }
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
 
-            if (e.getButton() == MouseEvent.BUTTON1) {
+            if (e.getButton() == MouseEvent.BUTTON3) {
+                startCoordX = editCoordX = e.getX();
+                startCoordY = editCoordY = e.getY();
+            } else if (e.getButton() == MouseEvent.BUTTON1) {
 
                 startCoordX = editCoordX = e.getX();
                 startCoordY = editCoordY = e.getY();
@@ -636,42 +640,82 @@ public class Paint2d extends JPanel {
                             drawing = true;
                             moving = false;
                             drawList.add(new Line(startCoordX, startCoordY, startCoordX, startCoordY));
+                            if (!isBrightRGBColor()) {
+                                drawList.get(drawList.size() - 1).setColor(getColor());
 
+                            } else {
+
+                                drawList.get(drawList.size() - 1).setColor(Color.BLACK);
+                            }
                             break;
                         case "rectangle":
                             drawing = true;
                             moving = false;
                             drawList.add(new graphics.Rectangle(startCoordX, startCoordY, 1, 1));
-                            System.out.println("Kreslim obdlznik");
+                            if (isBrightRGBColor()) {
+                                drawList.get(drawList.size() - 1).setColor(getColor());
+                                drawList.get(drawList.size() - 1).setBorderColor(Color.BLACK);
+                            } else {
+                                drawList.get(drawList.size() - 1).setColor(getColor());
+                                drawList.get(drawList.size() - 1).setBorderColor(Color.WHITE);
+                            }
                             break;
                         case "pencil":
                             drawing = true;
                             moving = false;
                             drawList.add(new graphics.Pencil(startCoordX, startCoordY, 0, 0));
-                            System.out.println("Kreslim ceruzkou");
+
+                            drawList.get(drawList.size() - 1).setColor(getColor());
+
                             break;
                         case "circle":
                             drawing = true;
                             moving = false;
                             drawList.add(new graphics.Elipse(startCoordX, startCoordY, 0, 0));
-                            System.out.println("Kreslim elipsu");
+                            if (!isBrightRGBColor()) {
+                                drawList.get(drawList.size() - 1).setColor(getColor());
+
+                            } else {
+                                drawList.get(drawList.size() - 1).setColor(Color.BLACK);
+                            }
+
                             break;
                         case "Elipse":
                             drawing = true;
                             moving = false;
                             drawList.add(new graphics.ElipseDiagram(startCoordX, startCoordY, 0, 0));
-                            System.out.println("Kreslim elipsu Diagramu");
+                            if (isBrightRGBColor()) {
+                                drawList.get(drawList.size() - 1).setColor(getColor());
+                                drawList.get(drawList.size() - 1).setBorderColor(Color.BLACK);
+                            } else {
+                                drawList.get(drawList.size() - 1).setColor(getColor());
+                                drawList.get(drawList.size() - 1).setBorderColor(Color.WHITE);
+                            }
+
+
                             break;
                         case "Diamond":
                             drawing = true;
                             moving = false;
                             drawList.add(new graphics.Diamond(startCoordX, startCoordY, startCoordX, startCoordY));
+                            drawList.get(drawList.size() - 1).setColor(getColor());
+                            if (isBrightRGBColor()) {
+                                drawList.get(drawList.size() - 1).setColor(getColor());
+                                drawList.get(drawList.size() - 1).setBorderColor(Color.BLACK);
+                            } else {
+                                drawList.get(drawList.size() - 1).setColor(getColor());
+                                drawList.get(drawList.size() - 1).setBorderColor(Color.WHITE);
+                            }
                             break;
                         case "TextArea":
                             drawing = true;
                             moving = false;
                             drawList.add(new graphics.TextArea(startCoordX, startCoordY, 0, 0));
-                            
+                            if (!isBrightRGBColor()) {
+                                drawList.get(drawList.size() - 1).setColor(getColor());
+                            } else {
+                                drawList.get(drawList.size() - 1).setColor(Color.BLACK);
+                            }
                             break;
                         case "edit":
                             drawing = false;
@@ -679,6 +723,7 @@ public class Paint2d extends JPanel {
 
                             editObject(startCoordX, startCoordY);
                             if (objectIndex > -1 && isObject) { //ak je vybraty nejaky objekt ide dalej
+                                drawList.get(objectIndex).setActive(true);
                                 panel.setCursor(new Cursor(Cursor.MOVE_CURSOR));
                                 switch (drawList.get(objectIndex).getClass().getCanonicalName().substring(9)) {
 
@@ -689,12 +734,10 @@ public class Paint2d extends JPanel {
                                         drawList.add(new graphics.Rectangle(positionOfCopiedRectangle[0], positionOfCopiedRectangle[1], positionOfCopiedRectangle[2], positionOfCopiedRectangle[3]));
                                         drawList.get(arrayIndex).setFinalCoordinates(positionOfCopiedRectangle[0], positionOfCopiedRectangle[1]);
                                         drawList.get(arrayIndex).setOrigin(objectIndex);
-                                        if (drawList.get(objectIndex).isActive()) {
-                                            drawList.get(arrayIndex).setActive(true);
-                                        } else {
-                                            drawList.get(arrayIndex).setActive(false);
-
-                                        }
+                                        drawList.get(arrayIndex).setActive(drawList.get(objectIndex).isActive());
+                                        drawList.get(arrayIndex).setShade(drawList.get(objectIndex).isShade());
+                                        drawList.get(arrayIndex).setColor(drawList.get(objectIndex).getColor());
+                                        drawList.get(arrayIndex).setBorderColor(drawList.get(objectIndex).getBorderColor());
                                         objectIndex = arrayIndex;
                                         arrayIndex++;
 
@@ -707,6 +750,11 @@ public class Paint2d extends JPanel {
                                         drawList.add(new graphics.Elipse(positionOfCopiedElipse[0], positionOfCopiedElipse[1], positionOfCopiedElipse[2], positionOfCopiedElipse[3]));
                                         drawList.get(arrayIndex).setFinalCoordinates(positionOfCopiedElipse[0], positionOfCopiedElipse[1]);
                                         drawList.get(arrayIndex).setOrigin(objectIndex);
+
+                                        drawList.get(arrayIndex).setActive(drawList.get(objectIndex).isActive());
+                                        drawList.get(arrayIndex).setShade(drawList.get(objectIndex).isShade());
+                                        drawList.get(arrayIndex).setColor(drawList.get(objectIndex).getColor());
+                                        drawList.get(arrayIndex).setBorderColor(drawList.get(objectIndex).getBorderColor());
                                         objectIndex = arrayIndex;
                                         arrayIndex++;
 
@@ -717,6 +765,10 @@ public class Paint2d extends JPanel {
                                         drawList.add(new graphics.ElipseDiagram(positionOfCopiedElipseD[0], positionOfCopiedElipseD[1], positionOfCopiedElipseD[2], positionOfCopiedElipseD[3]));
                                         drawList.get(arrayIndex).setFinalCoordinates(positionOfCopiedElipseD[0], positionOfCopiedElipseD[1]);
                                         drawList.get(arrayIndex).setOrigin(objectIndex);
+                                        drawList.get(arrayIndex).setActive(drawList.get(objectIndex).isActive());
+                                        drawList.get(arrayIndex).setShade(drawList.get(objectIndex).isShade());
+                                        drawList.get(arrayIndex).setColor(drawList.get(objectIndex).getColor());
+                                        drawList.get(arrayIndex).setBorderColor(drawList.get(objectIndex).getBorderColor());
                                         objectIndex = arrayIndex;
                                         arrayIndex++;
 
@@ -726,6 +778,10 @@ public class Paint2d extends JPanel {
                                         drawList.get(objectIndex).setVisible(false);
                                         drawList.add(new graphics.Line(positionOfCopiedLine[0], positionOfCopiedLine[1], positionOfCopiedLine[2], positionOfCopiedLine[3]));
                                         drawList.get(arrayIndex).setOrigin(objectIndex);
+                                        drawList.get(arrayIndex).setActive(drawList.get(objectIndex).isActive());
+                                        drawList.get(arrayIndex).setShade(drawList.get(objectIndex).isShade());
+                                        drawList.get(arrayIndex).setColor(drawList.get(objectIndex).getColor());
+                                        drawList.get(arrayIndex).setBorderColor(drawList.get(objectIndex).getBorderColor());
                                         objectIndex = arrayIndex;
                                         arrayIndex++;
                                         break;
@@ -738,6 +794,10 @@ public class Paint2d extends JPanel {
                                         drawList.get(objectIndex).setVisible(false);
                                         drawList.add(new graphics.Diamond(positionOfCopiedDiamond[0], positionOfCopiedDiamond[1], positionOfCopiedDiamond[2], positionOfCopiedDiamond[3]));
                                         drawList.get(arrayIndex).setOrigin(objectIndex);
+                                        drawList.get(arrayIndex).setActive(drawList.get(objectIndex).isActive());
+                                        drawList.get(arrayIndex).setShade(drawList.get(objectIndex).isShade());
+                                        drawList.get(arrayIndex).setColor(drawList.get(objectIndex).getColor());
+                                        drawList.get(arrayIndex).setBorderColor(drawList.get(objectIndex).getBorderColor());
                                         objectIndex = arrayIndex;
                                         arrayIndex++;
                                         break;
@@ -760,49 +820,52 @@ public class Paint2d extends JPanel {
 
         @Override
         public void mouseReleased(MouseEvent e) {
-            if (drawing) {
-                releasedCoordX = e.getX();
-                releasedCoordY = e.getY();
+            if (e.getButton() == MouseEvent.BUTTON1) {
+                if (drawing) {
+                    releasedCoordX = e.getX();
+                    releasedCoordY = e.getY();
 
-                if (Math.abs(releasedCoordX - startCoordX) > 2 && Math.abs(releasedCoordY - startCoordY) > 2 && (!(drawList.get(drawList.size() - 1) instanceof graphics.Rectangle)
-                        || !(drawList.get(drawList.size() - 1) instanceof graphics.Elipse)
-                        || !(drawList.get(drawList.size() - 1) instanceof graphics.ElipseDiagram)
-                        || !(drawList.get(drawList.size() - 1) instanceof graphics.Diamond))) {
+                    if ((Math.abs(releasedCoordX - startCoordX) > 2 || Math.abs(releasedCoordY - startCoordY) > 2) && (!(drawList.get(drawList.size() - 1) instanceof graphics.Rectangle)
+                            || !(drawList.get(drawList.size() - 1) instanceof graphics.Elipse)
+                            || !(drawList.get(drawList.size() - 1) instanceof graphics.ElipseDiagram)
+                            || !(drawList.get(drawList.size() - 1) instanceof graphics.Diamond))) {
+                        redoDrawList.clear();
+                        redoArrayIndex = 0;
+
+
+                        drawList.get(arrayIndex).setFinalCoordinates(releasedCoordX, releasedCoordY);
+                        drawList.get(arrayIndex).setFixReleasedCoordX(releasedCoordX);
+
+                        drawList.get(arrayIndex).setFixReleasedCoordY(releasedCoordY);
+                        drawList.get(arrayIndex).setFixStartCoordX(startCoordX);
+                        drawList.get(arrayIndex).setFixStartCoordY(startCoordY);
+
+                        arrayIndex++;
+                        drawing = false;
+                    } else {
+                        drawList.get(drawList.size() - 1).setVisible(false);
+                        drawList.remove(drawList.size() - 1);
+                        repaint();
+                    }
+                } else if (resizeDrawingArea) {
+                    resizeDrawingArea = false;
+                }
+
+                if (moving && isObject) {
                     redoDrawList.clear();
                     redoArrayIndex = 0;
+                    drawList.get(objectIndex).setFixStartCoordX(newStartCoordX);
+                    drawList.get(objectIndex).setFixStartCoordY(newStartCoordY);
+                    drawList.get(objectIndex).setFixReleasedCoordX(newFinalCoordX);
+                    drawList.get(objectIndex).setFixReleasedCoordY(newFinalCoordY);
+                    isObject = false;
+                    moving = false;
 
+                    objectIndex = -1;
 
-                    drawList.get(arrayIndex).setFinalCoordinates(releasedCoordX, releasedCoordY);
-                    drawList.get(arrayIndex).setFixReleasedCoordX(releasedCoordX);
-
-                    drawList.get(arrayIndex).setFixReleasedCoordY(releasedCoordY);
-                    drawList.get(arrayIndex).setFixStartCoordX(startCoordX);
-                    drawList.get(arrayIndex).setFixStartCoordY(startCoordY);
-                    arrayIndex++;
-                    drawing = false;
-                } else {
-                    drawList.get(drawList.size() - 1).setVisible(false);
-                    drawList.remove(drawList.size() - 1);
-                    repaint();
                 }
-            } else if (resizeDrawingArea) {
-                resizeDrawingArea = false;
+                //panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             }
-
-            if (moving && isObject) {
-                redoDrawList.clear();
-                redoArrayIndex = 0;
-                drawList.get(objectIndex).setFixStartCoordX(newStartCoordX);
-                drawList.get(objectIndex).setFixStartCoordY(newStartCoordY);
-                drawList.get(objectIndex).setFixReleasedCoordX(newFinalCoordX);
-                drawList.get(objectIndex).setFixReleasedCoordY(newFinalCoordY);
-                isObject = false;
-                moving = false;
-
-                objectIndex = -1;
-
-            }
-            //panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
     }
 }
