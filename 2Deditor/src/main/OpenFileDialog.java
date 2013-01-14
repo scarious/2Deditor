@@ -9,7 +9,9 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -31,6 +33,8 @@ public class OpenFileDialog implements ActionListener {
 	JFileChooser fc;
 	FileFilter fileFilter;
 	JTextPane textWidth, textHeight;
+	boolean ownFormatSelected = false;
+	
 	public OpenFileDialog(main.Paint2d paint) {
 		this.paint = paint;
 		this.frame = paint.getFrame();
@@ -53,11 +57,23 @@ public class OpenFileDialog implements ActionListener {
 		 if (fc.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 try {
-					Image image = ImageIO.read(file);
-					paint.addToDrawList(new graphics.Picture(image, Integer.parseInt(textWidth.getText()), Integer.parseInt(textHeight.getText())));
-				} catch (IOException e1) {
+					if(file.getCanonicalPath().endsWith("2dEdit")){
+						FileInputStream fin = new FileInputStream(file);
+						ObjectInputStream ois = new ObjectInputStream(fin);
+						paint.openOwnFormat((OwnFormat)ois.readObject());
+						ois.close();
+					} else {
+						Image image = ImageIO.read(file);
+						paint.addToDrawList(new graphics.Picture(image, Integer.parseInt(textWidth.getText()), Integer.parseInt(textHeight.getText())));
+					}
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+                
                 
             } else {
                
@@ -113,8 +129,6 @@ public class OpenFileDialog implements ActionListener {
 		public void loadImage() {
 			if (f == null || f.isDirectory()){
 				mainBox.setVisible(false);
-				//textHeight.setText("");
-				//textWidth.setText("");
 				return;
 			}
 			
@@ -191,7 +205,8 @@ public class OpenFileDialog implements ActionListener {
 			        	extension.endsWith(".jpeg") ||
 			        	extension.endsWith(".jpg") ||
 			        	extension.endsWith(".png") ||
-			        	extension.endsWith(".bmp")) {
+			        	extension.endsWith(".bmp") ||
+			        	extension.endsWith(".2dEdit") ) {
 			                return true;
 			        } else {
 			            return false;

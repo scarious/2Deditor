@@ -4,13 +4,16 @@
  */
 package graphics;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Admin
  */
-public class Elipse implements GraphicsObject {
+public class Elipse implements GraphicsObject, Serializable {
 
-    int[] coordinates = new int[4]; //0,1 - X, Y          2,3 - width, height
+	private static final long serialVersionUID = -4144551231822944362L;
+	int[] coordinates = new int[4]; //0,1 - X, Y          2,3 - width, height
     int startX, startY, currentX, currentY;
     int swapX, swapY, width, height;
     private int originalX, originalY;
@@ -20,46 +23,23 @@ public class Elipse implements GraphicsObject {
     private int FixStartCoordY;
     boolean isVisible = true;
     private int copiedFrom = -1;
+    private boolean isActive;
 
     public Elipse(int x1, int y1, int x2, int y2) {
-        originalX = x1; //startCoordX
+      originalX = x1; //startCoordX
         originalY = y1; //startCoordY
         startX = x1;
         startY = y1;
-        width = 0;
-        height = 0;
-    }
-
-    @Override
-    public void changeCoord(int x1, int y1, int x2, int y2) {
-        coordinates[0] = startX = x1;
-        coordinates[1] = startY = y1;
-
-        currentX = coordinates[2] = x2;
-        currentY = coordinates[3] = y2;
-        // System.out.println(" pociatocne: (" + x1 +"," + y1 + ")" + "(" + x2 +"," + y2 + ")");
-    }
-
-    @Override
-    public int[] getStartEndXY() {
-        if ((currentX - startX > 0) || (currentY - startY > 0)) {
-            width = Math.abs(currentX - startX);
-            height = Math.abs(currentY - startY);
-        } else {
-            width = 0;
-            height = 0;
-        }
-        coordinates[0] = startX;
-        coordinates[1] = startY;
-        coordinates[2] = width;
-        coordinates[3] = height;
-
-        return coordinates;
+        width = x2;
+        height = y2;
+        FixStartCoordX = startX;
+        FixStartCoordY = startY;
+        FixReleasedCoordX = startX + width;
+        FixReleasedCoordY = startY + height;
     }
 
     @Override
     public void setFinalCoordinates(int x2, int y2) {
-
         currentX = x2; //aktualne x
         currentY = y2; //aktualne y
 
@@ -69,7 +49,6 @@ public class Elipse implements GraphicsObject {
         } else {
             startX = originalX;
         }
-
         if (originalY > currentY) {	//startCoordY < releasedCoordY
             startY = currentY;
             currentY = originalY;
@@ -78,9 +57,33 @@ public class Elipse implements GraphicsObject {
         }
     }
 
+    @Override
+    public void changeCoord(int x1, int y1, int x2, int y2) {
+        coordinates[0] = startX = x1;
+        coordinates[1] = startY = y1;
+
+        coordinates[2] = currentX = x2;
+        coordinates[3] = currentY = y2;
+
+    }
+    
+    @Override
+    public int[] getStartEndXY() {
+        if ((currentX - startX > 0) || (currentY - startY > 0)) {
+            width = currentX - startX;
+            height = currentY - startY;
+        }
+        coordinates[0] = startX;
+        coordinates[1] = startY;
+        coordinates[2] = width;
+        coordinates[3] = height;
+        return coordinates;
+    }
+
+
     /**
      * @return the FixStartCoordX
-     */
+     */@Override
     public int getFixStartCoordX() {
         return FixStartCoordX;
     }
@@ -88,6 +91,7 @@ public class Elipse implements GraphicsObject {
     /**
      * @return the FixStartCoordY
      */
+    @Override
     public int getFixStartCoordY() {
         return FixStartCoordY;
     }
@@ -95,6 +99,7 @@ public class Elipse implements GraphicsObject {
     /**
      * @return the FixReleasedCoordX
      */
+    @Override
     public int getFixReleasedCoordX() {
         return FixReleasedCoordX;
     }
@@ -102,17 +107,20 @@ public class Elipse implements GraphicsObject {
     /**
      * @return the FixReleasedCoordY
      */
+    @Override
     public int getFixReleasedCoordY() {
         return FixReleasedCoordY;
     }
 
     // @Override
+    @Override
     public void setFixReleasedCoordX(int x) {
         FixReleasedCoordX = x;
 
     }
 
     //@Override
+    @Override
     public void setFixReleasedCoordY(int x) {
         FixReleasedCoordY = x;
     }
@@ -120,6 +128,7 @@ public class Elipse implements GraphicsObject {
     /**
      * @param FixStartCoordX the FixStartCoordX to set
      */
+    @Override
     public void setFixStartCoordX(int FixStartCoordx) {
         FixStartCoordX = FixStartCoordx;
     }
@@ -127,6 +136,7 @@ public class Elipse implements GraphicsObject {
     /**
      * @param FixStartCoordY the FixStartCoordY to set
      */
+    @Override
     public void setFixStartCoordY(int FixStartCoordy) {
         FixStartCoordY = FixStartCoordy;
     }
@@ -150,4 +160,14 @@ public class Elipse implements GraphicsObject {
 	public int getOrigin(){
 		return copiedFrom;
 	}
+
+    @Override
+    public void setActive(boolean active) {
+        isActive=active;
+    }
+
+    @Override
+    public boolean isActive() {
+        return isActive;
+    }
 }

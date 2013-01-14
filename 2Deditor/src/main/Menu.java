@@ -2,13 +2,13 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
-
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -18,13 +18,19 @@ import javax.swing.JToolBar;
 public class Menu {
 
     JFrame frame;
-    Paint2d paint;
-    JButton pencil, line, rectangle, edit, circle, elipse;
+    private Paint2d paint;
+    JButton pencil, line, rectangle, edit, circle, elipse, diamond, red, yel, textArea;
+    JCheckBox grid;
 
     public Menu(Paint2d paint) {
 
         this.paint = paint;
         this.frame = paint.getFrame();
+
+    }
+
+    public JCheckBox checkbox() {
+        return grid;
     }
 
     public void createMenu() {
@@ -51,7 +57,6 @@ public class Menu {
 
         menuItem = new JMenuItem("New");
         menuItem.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 paint.clearDrawlist();
@@ -62,7 +67,6 @@ public class Menu {
         menu.addSeparator();
         menuItem = new JMenuItem("Exit");
         menuItem.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
@@ -78,17 +82,17 @@ public class Menu {
 
         //UNDO button and action
         ActionListener actionUndo = new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 paint.undoAction();
             }
         };
         menuItem = new JMenuItem("Undo <<");
+        menuItem.addActionListener(actionUndo);
         menu.add(menuItem);
 
-        ActionListener actionRedo = new ActionListener() {
 
+        ActionListener actionRedo = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 paint.redoAction();
@@ -104,7 +108,6 @@ public class Menu {
         menuItem = new JMenuItem("Pencil :^:");
 
         ActionListener actionPencil = new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 Paint2d.defaultShape = "pencil";
@@ -117,13 +120,11 @@ public class Menu {
         menuItem = new JMenuItem("Line |");
 
         ActionListener actionLine = new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 Paint2d.defaultShape = "line";
                 line.setBackground(Color.LIGHT_GRAY);
 
-                System.out.println("Drawing: line");
             }
         };
 
@@ -133,52 +134,82 @@ public class Menu {
         menuItem = new JMenuItem("Rectangle []");
 
         ActionListener actionRectangle = new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 Paint2d.defaultShape = "rectangle";
                 rectangle.setBackground(Color.LIGHT_GRAY);
-                System.out.println("Drawing: rectangle");
+
             }
         };
 
+        menuItem.addActionListener(actionRectangle);
+        menu.add(menuItem);
 
         menuItem = new JMenuItem("Circle");
 
         ActionListener actionCircle = new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 Paint2d.defaultShape = "circle";
                 circle.setBackground(Color.LIGHT_GRAY);
-                System.out.println("Drawing: Circle");
+
             }
         };
+        menuItem.addActionListener(actionCircle);
+        menu.add(menuItem);
 
-
-        menuItem = new JMenuItem("elipse");
+        menuItem = new JMenuItem("Elipse");
 
         ActionListener actionElipse = new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
-                Paint2d.defaultShape = "elipse";
+                Paint2d.defaultShape = "Elipse";
                 elipse.setBackground(Color.LIGHT_GRAY);
-                System.out.println("Drawing: Elipse");
+
             }
         };
+        menuItem.addActionListener(actionElipse);
+        menu.add(menuItem);
+
+        menuItem = new JMenuItem("Diamond <>");
+
+        ActionListener actionDiamond = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Paint2d.defaultShape = "Diamond";
+                diamond.setBackground(Color.LIGHT_GRAY);
+
+            }
+        };
+        menuItem.addActionListener(actionDiamond);
+        menu.add(menuItem);
 
 
+        
+         menuItem = new JMenuItem("TextArea");
+
+        ActionListener actionTextArea = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Paint2d.defaultShape = "TextArea";
+                textArea.setBackground(Color.LIGHT_GRAY);
+
+            }
+        };
+        menuItem.addActionListener(actionTextArea);
+        menu.add(menuItem);
+
+        
+        
 
         menuItem = new JMenuItem("Edit");
 
         ActionListener actionEdit = new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 Paint2d.defaultShape = "edit";
                 edit.setBackground(Color.LIGHT_GRAY);
-                System.out.println("Editing object");
+
             }
         };
 
@@ -191,11 +222,12 @@ public class Menu {
         menuBar.add(menu);
         //pridanie menubaru do okna
         frame.setJMenuBar(menuBar);
-
+//********************************************/
         //Toolbar s ikonami
         JToolBar toolBar = new JToolBar("ToolBar", JToolBar.HORIZONTAL);
 
-        JToolBar toolBarV = new JToolBar("ToolBar", JToolBar.VERTICAL);
+
+        //  JToolBar toolBarV = new JToolBar("ToolBar", JToolBar.VERTICAL);
 //        toolBarV.setAlignmentX(JToolBar.VERTICAL);
 
 
@@ -203,6 +235,7 @@ public class Menu {
         ImageIcon icon = new ImageIcon(url);
         JButton undo = new JButton(icon);
         undo.addActionListener(actionUndo);
+        undo.setToolTipText("Undo last step");
         toolBar.add(undo);
 
         url = Paint2d.class.getClassLoader().getResource("redoIcon.gif");
@@ -210,17 +243,20 @@ public class Menu {
         JButton redo = new JButton(icon);
         redo.addActionListener(actionRedo);
         redo.setToolTipText("Reverts step back");
+
+
         toolBar.add(redo);
 
         toolBar.addSeparator();
 
         ActionListener shapeButtonsListener = new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 checkedButtonColor();
             }
         };
+
+
 
         url = Paint2d.class.getClassLoader().getResource("pencilIcon.gif");
         icon = new ImageIcon(url);
@@ -259,18 +295,88 @@ public class Menu {
         elipse.addActionListener(actionElipse);
         toolBar.add(elipse);
 
+        url = Paint2d.class.getClassLoader().getResource("Diamond.gif");
+        icon = new ImageIcon(url);
+        diamond = new JButton(icon);
+        diamond.addActionListener(shapeButtonsListener);
+        diamond.addActionListener(actionDiamond);
+        toolBar.add(diamond);
+
+
         url = Paint2d.class.getClassLoader().getResource("targetIcon.gif");
         icon = new ImageIcon(url);
         edit = new JButton(icon);
         edit.addActionListener(shapeButtonsListener);
         edit.addActionListener(actionEdit);
         toolBar.add(edit);
+   
+        url = Paint2d.class.getClassLoader().getResource("textareaIcon.gif");
+        icon = new ImageIcon(url);
+        textArea = new JButton(icon);
+        textArea.addActionListener(shapeButtonsListener);
+        textArea.addActionListener(actionTextArea);
+        toolBar.add(textArea);
+        
+        edit.setToolTipText("Moving object");
+        diamond.setToolTipText("Drawing If-Else Block");
+        elipse.setToolTipText("Drawing Elipse");
+        rectangle.setToolTipText("Drawing rectangle");
+        circle.setToolTipText("Drawing Circle");
+        textArea.setToolTipText("TextArea");
+        
+        url = Paint2d.class.getClassLoader().getResource("2.gif");
+        icon = new ImageIcon(url);
+        red = new JButton(icon);
+        red.setSize(new Dimension(30, 35));
+        red.setBorder(null);
+        red.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                paint.setColor(Color.RED);
+            }
+        });
+        toolBar.add(red);
+
+        url = Paint2d.class.getClassLoader().getResource("1.gif");
+        icon = new ImageIcon(url);
+        yel = new JButton(icon);
+        yel.setSize(new Dimension(30, 35));
+        yel.setBorder(null);
+        yel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                paint.setColor(Color.YELLOW);
+            }
+        });
+        toolBar.add(yel);
+
+//        for (int i=0; i<=100; i=+10){
+//            toolBar.add(new )
+//        }
+
+
+
+        grid = new JCheckBox("Grid", false);
+        toolBar.add(grid);
+        grid.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if (checkbox().isSelected()) {
+                    paint.setGridVisible(true);
+
+                } else {
+                    paint.setGridVisible(false);
+
+                }
+                paint.repaint();
+            }
+        });
+       
 
 
         checkedButtonColor();
 
         frame.add(toolBar, BorderLayout.NORTH);
-        frame.add(toolBarV, BorderLayout.EAST);
     }
 
     private void checkedButtonColor() {
@@ -282,6 +388,9 @@ public class Menu {
                 circle.setBackground(Color.WHITE);
                 edit.setBackground(Color.WHITE);
                 elipse.setBackground(Color.WHITE);
+                diamond.setBackground(Color.WHITE);
+                textArea.setBackground(Color.WHITE);
+                        
                 break;
             case "rectangle":
                 rectangle.setBackground(Color.LIGHT_GRAY);
@@ -290,6 +399,8 @@ public class Menu {
                 circle.setBackground(Color.WHITE);
                 edit.setBackground(Color.WHITE);
                 elipse.setBackground(Color.WHITE);
+                diamond.setBackground(Color.WHITE);
+                textArea.setBackground(Color.WHITE);
                 break;
             case "circle":
                 circle.setBackground(Color.LIGHT_GRAY);
@@ -298,14 +409,18 @@ public class Menu {
                 rectangle.setBackground(Color.WHITE);
                 edit.setBackground(Color.WHITE);
                 elipse.setBackground(Color.WHITE);
+                diamond.setBackground(Color.WHITE);
+                textArea.setBackground(Color.WHITE);
                 break;
-            case "elipse":
+            case "Elipse":
                 elipse.setBackground(Color.LIGHT_GRAY);
                 line.setBackground(Color.WHITE);
                 pencil.setBackground(Color.WHITE);
                 rectangle.setBackground(Color.WHITE);
                 edit.setBackground(Color.WHITE);
                 circle.setBackground(Color.WHITE);
+                diamond.setBackground(Color.WHITE);
+                textArea.setBackground(Color.WHITE);
                 break;
             case "edit":
                 edit.setBackground(Color.LIGHT_GRAY);
@@ -314,7 +429,29 @@ public class Menu {
                 rectangle.setBackground(Color.WHITE);
                 circle.setBackground(Color.WHITE);
                 elipse.setBackground(Color.WHITE);
+                diamond.setBackground(Color.WHITE);
+                textArea.setBackground(Color.WHITE);
                 break;
+            case "Diamond":
+                diamond.setBackground(Color.LIGHT_GRAY);
+                edit.setBackground(Color.WHITE);
+                line.setBackground(Color.WHITE);
+                pencil.setBackground(Color.WHITE);
+                rectangle.setBackground(Color.WHITE);
+                circle.setBackground(Color.WHITE);
+                elipse.setBackground(Color.WHITE);
+                textArea.setBackground(Color.WHITE);
+            case "TextArea":
+               diamond.setBackground(Color.WHITE);
+                edit.setBackground(Color.WHITE);
+                line.setBackground(Color.WHITE);
+                pencil.setBackground(Color.WHITE);
+                rectangle.setBackground(Color.WHITE);
+                circle.setBackground(Color.WHITE);
+                elipse.setBackground(Color.WHITE);
+                textArea.setBackground(Color.LIGHT_GRAY);
+                break;
+
             default:
                 line.setBackground(Color.LIGHT_GRAY);
                 pencil.setBackground(Color.WHITE);
@@ -322,6 +459,8 @@ public class Menu {
                 edit.setBackground(Color.WHITE);
                 elipse.setBackground(Color.WHITE);
                 circle.setBackground(Color.WHITE);
+                diamond.setBackground(Color.WHITE);
+                textArea.setBackground(Color.WHITE);
                 break;
         }
     }

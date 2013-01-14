@@ -1,8 +1,11 @@
 package graphics;
 
 import java.awt.Image;
+import java.io.Serializable;
 
-public class Picture implements GraphicsObject{
+public class Picture implements GraphicsObject, Serializable{
+
+	private static final long serialVersionUID = 2560992972815265877L;
 	Image image;
 	private int copiedFrom = -1;
 	boolean isVisible = true;
@@ -95,6 +98,16 @@ public class Picture implements GraphicsObject{
 	public int getOrigin(){
 		return copiedFrom;
 	}
+
+    @Override
+    public void setActive(boolean active) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isActive() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
    
 

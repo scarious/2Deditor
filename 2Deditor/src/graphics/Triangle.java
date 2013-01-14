@@ -1,8 +1,11 @@
 package graphics;
 
-public class Triangle implements GraphicsObject {
+import java.io.Serializable;
 
-    int[] coordinates = new int[5];
+public class Triangle implements GraphicsObject, Serializable {
+
+	private static final long serialVersionUID = -26705300878522162L;
+	int[] coordinates = new int[5];
     private int startX;
     private int startY;
     private int currentX;
@@ -111,6 +114,18 @@ public class Triangle implements GraphicsObject {
 	@Override
 	public int getOrigin(){
 		return copiedFrom;
+	}
+
+	@Override
+	public void setActive(boolean active) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isActive() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
 

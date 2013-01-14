@@ -1,10 +1,12 @@
 package graphics;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pencil implements GraphicsObject {
+public class Pencil implements GraphicsObject, Serializable {
 
+	private static final long serialVersionUID = 5706226038264555875L;
 	//int[] coordinates = new int[];
 	List<Integer> coordinates = new ArrayList<>();
 	int x = 0, y = 1;
@@ -95,5 +97,15 @@ public class Pencil implements GraphicsObject {
 	public int getOrigin(){
 		return copiedFrom;
 	}
+
+    @Override
+    public void setActive(boolean active) {
+       
+    }
+
+    @Override
+    public boolean isActive() {
+       return true;
+    }
 
 }

@@ -42,5 +42,6 @@ public interface GraphicsObject {
     
     public void setOrigin(int copiedFrom);
     public int getOrigin();
-   
+    public void setActive(boolean active);
+    public boolean isActive();
 }

@@ -1,15 +1,22 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package graphics;
 
 import java.io.Serializable;
 
-public class Line implements GraphicsObject, Serializable {
+/**
+ *
+ * @author Lukas
+ */
+public class Diamond implements GraphicsObject, Serializable{
 
-	private static final long serialVersionUID = -3014797520706880526L;
+	private static final long serialVersionUID = 7971658281737692629L;
 	int[] coordinates = new int[4];
+    private int originalX, originalY;
     private int startX;
     private int startY;
-    private int originalX;
-    private int originalY;
     private int currentX;
     private int currentY;
     private int FixReleasedCoordY;
@@ -17,14 +24,14 @@ public class Line implements GraphicsObject, Serializable {
     private int FixStartCoordX;
     private int FixStartCoordY;
     boolean isVisible = true;
-    boolean isActive = false;
     private int copiedFrom = -1;
+    private boolean isActive;
 
-    public Line(int x1, int y1, int x2, int y2) {
-        coordinates[0] = x1; //startCoordX
-        coordinates[1] = y1; //startCoordY
-        startX = originalX= x1;
-        startY = originalY=y1;
+    public Diamond(int x1, int y1, int x2, int y2) {
+        originalX = x1; //startCoordX
+        originalY = y1; //startCoordY
+        startX = x1;
+        startY = y1;
         currentX = x2;// - startX;
         currentY = y2;
         FixStartCoordX = x1;
@@ -32,13 +39,26 @@ public class Line implements GraphicsObject, Serializable {
         FixReleasedCoordX = x2;
         FixReleasedCoordY = y2;
     }
-
+    
     @Override
     public void setFinalCoordinates(int x2, int y2) {
+//        currentX = x2;// - startX;
+//        currentY = y2;//- startY;
+          currentX = x2; //aktualne x
+        currentY = y2; //aktualne y
 
-        currentX = x2;// - startX;
-        currentY = y2;//- startY;
-         
+        if (originalX > currentX) {
+            startX = currentX;
+            currentX = originalX;
+        } else {
+            startX = originalX;
+        }
+        if (originalY > currentY) {	//startCoordY < releasedCoordY
+            startY = currentY;
+            currentY = originalY;
+        } else {
+            startY = originalY;
+        }
     }
 
     @Override
@@ -50,9 +70,6 @@ public class Line implements GraphicsObject, Serializable {
 
         return coordinates;
     }
-    /*
-     * opravitto treba lebo to nieje dobre, zatial mi to este nejde
-     */
 
     @Override
     public void changeCoord(int x1, int y1, int x2, int y2) {
@@ -104,33 +121,32 @@ public class Line implements GraphicsObject, Serializable {
     }
 
     @Override
-	public boolean visible() {
-		return isVisible;
-	}
+    public boolean visible() {
+        return isVisible;
+    }
 
+    @Override
+    public void setVisible(boolean isVisible) {
+        this.isVisible = isVisible;
+    }
 
-	@Override
-	public void setVisible(boolean isVisible) {
-		this.isVisible = isVisible;
-	}
+    @Override
+    public void setOrigin(int copiedFrom) {
+        this.copiedFrom = copiedFrom;
+    }
 
-	@Override
-	public void setOrigin(int copiedFrom){
-		this.copiedFrom = copiedFrom;
-	}
-	
-	@Override
-	public int getOrigin(){
-		return copiedFrom;
-	}
+    @Override
+    public int getOrigin() {
+        return copiedFrom;
+    }
 
     @Override
     public void setActive(boolean active) {
-        isActive=active;
+      isActive=active;
     }
 
     @Override
     public boolean isActive() {
-        return isActive;
+      return isActive;
     }
 }

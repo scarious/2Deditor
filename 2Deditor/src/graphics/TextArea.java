@@ -1,32 +1,28 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package graphics;
 
 import java.io.Serializable;
 
-/**
- *
- * @author Admin
- */
-public class ElipseDiagram implements GraphicsObject, Serializable {
+import javax.swing.JTextArea;
 
-	private static final long serialVersionUID = -8616786407829105724L;
+public class TextArea implements GraphicsObject, Serializable {
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3826810746829941166L;
 	int[] coordinates = new int[4]; //0,1 - X, Y          2,3 - width, height
-    int startX, startY, currentX, currentY;
+    int originalX, originalY, startX, startY, currentX, currentY;
     int swapX, swapY, width, height;
-    private int originalX, originalY;
     private int FixReleasedCoordY;
     private int FixReleasedCoordX;
     private int FixStartCoordX;
     private int FixStartCoordY;
-    boolean isVisible = true;
-    private int copiedFrom = -1;
-    private boolean isActive;
+    boolean isVisible = true, isActive=false;
+    int copiedFrom = -1;
+    JTextArea textArea;
 
-    public ElipseDiagram(int x1, int y1, int x2, int y2) {
-      originalX = x1; //startCoordX
+    public TextArea(int x1, int y1, int x2, int y2) {
+        originalX = x1; //startCoordX
         originalY = y1; //startCoordY
         startX = x1;
         startY = y1;
@@ -36,6 +32,12 @@ public class ElipseDiagram implements GraphicsObject, Serializable {
         FixStartCoordY = startY;
         FixReleasedCoordX = startX + width;
         FixReleasedCoordY = startY + height;
+        textArea= new JTextArea();
+ 
+    }
+    
+    public JTextArea getTextArea(){
+        return textArea;
     }
 
     @Override
@@ -49,12 +51,12 @@ public class ElipseDiagram implements GraphicsObject, Serializable {
         } else {
             startX = originalX;
         }
-//        if (originalY > currentY) {	//startCoordY < releasedCoordY
-//            startY = currentY;
-//            currentY = originalY;
-//        } else {
+        if (originalY > currentY) {	//startCoordY < releasedCoordY
+            startY = currentY;
+            currentY = originalY;
+        } else {
             startY = originalY;
-//        }
+        }
     }
 
     @Override
@@ -76,14 +78,15 @@ public class ElipseDiagram implements GraphicsObject, Serializable {
         coordinates[0] = startX;
         coordinates[1] = startY;
         coordinates[2] = width;
-        coordinates[3] = width/2;
+        coordinates[3] = height;
         return coordinates;
     }
 
 
     /**
      * @return the FixStartCoordX
-     */@Override
+     */
+    @Override
     public int getFixStartCoordX() {
         return FixStartCoordX;
     }
@@ -112,14 +115,12 @@ public class ElipseDiagram implements GraphicsObject, Serializable {
         return FixReleasedCoordY;
     }
 
-    // @Override
     @Override
     public void setFixReleasedCoordX(int x) {
         FixReleasedCoordX = x;
 
     }
 
-    //@Override
     @Override
     public void setFixReleasedCoordY(int x) {
         FixReleasedCoordY = x;
@@ -142,32 +143,32 @@ public class ElipseDiagram implements GraphicsObject, Serializable {
     }
 
     @Override
-	public boolean visible() {
-		return isVisible;
-	}
+    public boolean visible() {
+        return isVisible;
+    }
 
     @Override
-	public void setVisible(boolean isVisible) {
-		this.isVisible = isVisible;
-	}
+    public void setVisible(boolean isVisible) {
+        this.isVisible = isVisible;
+    }
 
     @Override
-	public void setOrigin(int copiedFrom){
-		this.copiedFrom = copiedFrom;
-	}
-	
-	@Override
-	public int getOrigin(){
-		return copiedFrom;
-	}
+    public void setOrigin(int copiedFrom) {
+        this.copiedFrom = copiedFrom;
+    }
+
+    @Override
+    public int getOrigin() {
+        return copiedFrom;
+    }
 
     @Override
     public void setActive(boolean active) {
-       isActive=active;
+      isActive=active;
     }
 
     @Override
     public boolean isActive() {
-        return isActive;
+      return isActive;
     }
 }
